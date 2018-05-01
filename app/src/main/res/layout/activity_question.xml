@@ -5,24 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
-    tools:context="com.example.danif.hoponcmu.LogInActivity">
+    tools:context="com.example.danif.hoponcmu.QuestionActivity">
 
-    <EditText
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:hint="Username"
-        android:layout_marginTop="150dp"/>
-
-    <EditText
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:hint="Code"/>
-
-    <Button
-        android:id="@+id/btnLogIn_LogIn"
+    <TextView
+        android:id="@+id/txtQuizzTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LogIn"
-        android:layout_marginTop="10dp"/>
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"/>
+    <ListView
+        android:id="@+id/listViewQuestions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+    </ListView>
 </LinearLayout>
