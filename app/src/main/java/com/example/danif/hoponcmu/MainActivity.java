@@ -56,8 +56,9 @@ public class MainActivity extends AppCompatActivity {
         questions.add(question3);
         questions.add(question4);
         Quizz quizz1 = new Quizz("Quizz1", questions);
-        //new Quizz("Quizz2", null);
-        //new Quizz("Quizz3", null);
+        new Quizz("quizz2", null);
+        new Quizz("Quizz3", null);
+        new Quizz("Quizz4", null);
 
         System.out.println("------- " + Integer.toString(Quizz.quizzes.size()));
 
