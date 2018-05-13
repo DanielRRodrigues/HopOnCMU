@@ -21,5 +21,4 @@ public class SignUpCommand implements Command {
         ch.handle(this);
     }
 
-
 }
