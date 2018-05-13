@@ -12,8 +12,8 @@ public class HelloCommand implements Command {
     }
 
     @Override
-    public Response handle(CommandHandler chi) {
-        return chi.handle(this);
+    public void handle(CommandHandler chi) {
+        chi.handle(this);
     }
 
     public String getMessage() {
