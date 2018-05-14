@@ -1,6 +1,7 @@
 package com.example.danif.hoponcmu;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,18 +9,53 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.danif.hoponcmu.DataObjects.Constants;
 import com.example.danif.hoponcmu.DataObjects.Question;
 import com.example.danif.hoponcmu.DataObjects.Quiz;
+import com.example.danif.hoponcmu.client.CommandHandlerImpl;
+import com.example.danif.hoponcmu.command.DownloadQuizzesCommand;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
     private boolean loggedIn = false;
 
     private Button btnLogOut;
+    private Button btnDownloadQuizzes;
+
+    private String currentMonument;
+
+    public class DownloadQuizzesAction extends AsyncTask<Void, Void, Void> {
+
+        private boolean successDownload = false;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            CommandHandlerImpl chi = new CommandHandlerImpl();
+
+            // Random used for test purpose
+            this.successDownload = new Random().nextBoolean();
+
+            DownloadQuizzesCommand suc = new DownloadQuizzesCommand(MainActivity.this.currentMonument);
+            // suc.handle(chi);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (this.successDownload) {
+                Toast.makeText(MainActivity.this, "Quizzes for " + MainActivity.this.currentMonument + " downloaded", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(MainActivity.this, "Failed to download quizzes", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Tests
         this.testingQuizzes();
+        this.currentMonument = "TestMonument";
 
         if (!this.loggedIn) {
             this.authenticate();
@@ -93,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getViews() {
         this.btnLogOut = (Button) findViewById(R.id.btnLogOut_Main);
+        this.btnDownloadQuizzes = (Button) findViewById(R.id.btnDonwloadQuizzes_Main);
     }
 
     private void setListeners() {
@@ -101,6 +139,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 MainActivity.this.loggedIn = false;
                 MainActivity.this.authenticate();
+            }
+        });
+        this.btnDownloadQuizzes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AsyncTask<Void, Void, Void> task = new DownloadQuizzesAction();
+                try {
+                    task.execute().get();
+                } catch (InterruptedException e){
+                    // TODO
+                } catch (ExecutionException e) {
+                    // TODO
+                }
             }
         });
     }
