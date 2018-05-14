@@ -24,6 +24,8 @@ public class SignUpActivity extends AppCompatActivity {
     private boolean loggedIn = false;
 
     public class SignUpAction extends AsyncTask<Void, Void, Void>{
+        private String username;
+        private String code;
         private boolean emptyUsername = false;
         private boolean emptyCode = false;
 
@@ -31,16 +33,10 @@ public class SignUpActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             CommandHandlerImpl chi = new CommandHandlerImpl();
 
-            String username = SignUpActivity.this.editUsername.getText().toString().trim();
-            String code = SignUpActivity.this.editCode.getText().toString().trim();
+            this.username = SignUpActivity.this.editUsername.getText().toString().trim();
+            this.code = SignUpActivity.this.editCode.getText().toString().trim();
 
-            if (username.isEmpty()) {
-                emptyUsername = true;
-                return null;
-            }
-
-            if (code.isEmpty()) {
-                emptyCode = true;
+            if (!this.valid_input()) {
                 return null;
             }
 
@@ -68,6 +64,19 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(SignUpActivity.this, "Signed up with SUCCESS", Toast.LENGTH_SHORT).show();
             }
         }
+
+        private boolean valid_input() {
+            if (this.username.isEmpty()) {
+                this.emptyUsername = true;
+                return false;
+            }
+
+            if (this.code.isEmpty()) {
+                this.emptyCode = true;
+                return false;
+            }
+            return true;
+        }
     }
 
     @Override
@@ -77,11 +86,11 @@ public class SignUpActivity extends AppCompatActivity {
 
         setResult(Constants.SIGNUP_FAILED);
 
-        editUsername = (EditText) findViewById(R.id.signUpUsername);
-        editCode = (EditText) findViewById(R.id.signUpCode);
+        this.editUsername = (EditText) findViewById(R.id.signUpUsername);
+        this.editCode = (EditText) findViewById(R.id.signUpCode);
 
-        btnSignUp = (Button) findViewById(R.id.btnSignUp_SignUp);
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
+        this.btnSignUp = (Button) findViewById(R.id.btnSignUp_SignUp);
+        this.btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AsyncTask<Void, Void, Void> task = new SignUpAction();
