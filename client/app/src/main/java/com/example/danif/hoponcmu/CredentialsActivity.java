@@ -10,6 +10,9 @@ import com.example.danif.hoponcmu.DataObjects.Constants;
 
 public class CredentialsActivity extends AppCompatActivity {
 
+    private Button btnLogIn;
+    private Button btnSignUp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,23 +20,8 @@ public class CredentialsActivity extends AppCompatActivity {
 
         setResult(Constants.AUTH_FAILED);
 
-        Button btnLogIn = (Button) findViewById(R.id.btnLogIn_Credentials);
-        btnLogIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),LogInActivity.class);
-                startActivityForResult(intent, Constants.REQUEST_LOGIN);
-            }
-        });
-
-        Button btnSignUp = (Button) findViewById(R.id.btnSignUp);
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
-                startActivityForResult(intent, Constants.REQUEST_SIGNUP);
-            }
-        });
+        this.getViews();
+        this.setListeners();
     }
 
     @Override
@@ -55,5 +43,27 @@ public class CredentialsActivity extends AppCompatActivity {
                 // Do Nothing
             }
         }
+    }
+
+    private void getViews() {
+        this.btnLogIn = (Button) findViewById(R.id.btnLogIn_Credentials);
+        this.btnSignUp = (Button) findViewById(R.id.btnSignUp);
+    }
+
+    private void setListeners() {
+        this.btnLogIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),LogInActivity.class);
+                startActivityForResult(intent, Constants.REQUEST_LOGIN);
+            }
+        });
+        this.btnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+                startActivityForResult(intent, Constants.REQUEST_SIGNUP);
+            }
+        });
     }
 }

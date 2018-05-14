@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class CustomQuizListAdapter extends ArrayAdapter<Quiz> {
 
     CustomQuizListAdapter(Context context, ArrayList<Quiz> quizzes) {
-        super(context, R.layout.custom_quizz_row, quizzes);
+        super(context, R.layout.custom_quiz_row, quizzes);
 
     }
 
@@ -24,10 +24,10 @@ public class CustomQuizListAdapter extends ArrayAdapter<Quiz> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        View customView = layoutInflater.inflate(R.layout.custom_quizz_row, parent, false);
+        View customView = layoutInflater.inflate(R.layout.custom_quiz_row, parent, false);
 
         Quiz item = getItem(position);
-        TextView txtQuizz = (TextView) customView.findViewById(R.id.txtQuizzListView);
+        TextView txtQuizz = (TextView) customView.findViewById(R.id.txtQuizListView);
         txtQuizz.setText(item.getTitle());
 
         return customView;

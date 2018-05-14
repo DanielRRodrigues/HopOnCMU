@@ -86,10 +86,17 @@ public class LogInActivity extends AppCompatActivity {
 
         setResult(Constants.LOGIN_FAILED);
 
+        this.getViews();
+        this.setListeners();
+    }
+
+    private void getViews() {
         this.editUsername = (EditText) findViewById(R.id.logInUsername);
         this.editCode = (EditText) findViewById(R.id.logInCode);
-
         this.btnSignUp = (Button) findViewById(R.id.btnLogIn_LogIn);
+    }
+
+    private void setListeners() {
         this.btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Button;
 
 import com.example.danif.hoponcmu.DataObjects.Constants;
 import com.example.danif.hoponcmu.DataObjects.Question;
@@ -18,26 +19,31 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean loggedIn = false;
 
+    private Button btnLogOut;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // Tests
-        testingQuizzes();
+        this.testingQuizzes();
 
         if (!this.loggedIn) {
             this.authenticate();
         }
 
-        ListAdapter quizzAdapter = new CustomQuizListAdapter(this, Quiz.quizzes);
-        final ListView quizzListView = (ListView) findViewById(R.id.quizzListView);
-        quizzListView.setAdapter(quizzAdapter);
+        this.getViews();
+        this.setListeners();
 
-        quizzListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ListAdapter quizAdapter = new CustomQuizListAdapter(this, Quiz.quizzes);
+        final ListView quizListView = (ListView) findViewById(R.id.quizListView);
+        quizListView.setAdapter(quizAdapter);
+
+        quizListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Quiz item = (Quiz) quizzListView.getItemAtPosition(position);
+                Quiz item = (Quiz) quizListView.getItemAtPosition(position);
                 Intent intent = new Intent(getApplicationContext(), QuestionActivity.class);
                 intent.putExtra("Quiz", item);
                 startActivity(intent);
@@ -77,12 +83,25 @@ public class MainActivity extends AppCompatActivity {
         questions.add(question2);
         questions.add(question3);
         questions.add(question4);
-        Quiz quiz1 = new Quiz("Quizz1", questions);
-        new Quiz("quizz2", null);
-        new Quiz("Quizz3", null);
-        new Quiz("Quizz4", null);
+        Quiz quiz1 = new Quiz("Quiz1", questions);
+        new Quiz("quiz2", null);
+        new Quiz("Quiz3", null);
+        new Quiz("Quiz4", null);
 
         System.out.println("------- " + Integer.toString(Quiz.quizzes.size()));
+    }
 
+    private void getViews() {
+        this.btnLogOut = (Button) findViewById(R.id.btnLogOut_Main);
+    }
+
+    private void setListeners() {
+        this.btnLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.this.loggedIn = false;
+                MainActivity.this.authenticate();
+            }
+        });
     }
 }

@@ -10,13 +10,13 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="25dp">
+        android:layout_margin="25dp"
+        android:orientation="horizontal">
 
         <Button
             android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginRight="40dp"
             android:text="Locations"
@@ -24,18 +24,35 @@
 
         <Button
             android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:text="Download Quizz"
+            android:text="Download Quizzes"
             android:textSize="12sp" />
 
     </LinearLayout>
 
     <ListView
-        android:id="@+id/quizzListView"
+        android:id="@+id/quizListView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp">
-    </ListView>
+        android:layout_height="327dp"
+        android:layout_marginTop="15dp"></ListView>
+
+    <LinearLayout
+        android:layout_width="103dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="25dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnLogOut_Main"
+            android:layout_width="100dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="40dp"
+            android:text="Logout"
+            android:textSize="12sp" />
+
+    </LinearLayout>
 
 </LinearLayout>
