@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.danif.hoponcmu.DataObejcts.Quizz;
+import com.example.danif.hoponcmu.DataObjects.Quiz;
 
 public class QuestionActivity extends AppCompatActivity {
 
@@ -16,10 +16,10 @@ public class QuestionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_question);
 
         Intent intent = getIntent();
-        Quizz quizz = (Quizz) intent.getSerializableExtra("Quizz");
+        Quiz quiz = (Quiz) intent.getSerializableExtra("Quiz");
 
         TextView txtQuizzTitle = (TextView) findViewById(R.id.txtQuizzTitle);
-        txtQuizzTitle.setText(quizz.getTitle());
+        txtQuizzTitle.setText(quiz.getTitle());
 
         ListView listViewQuestions = (ListView) findViewById(R.id.listViewQuestions);
 

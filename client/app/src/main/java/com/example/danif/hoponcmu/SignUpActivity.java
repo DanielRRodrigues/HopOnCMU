@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.danif.hoponcmu.DataObjects.Constants;
 import com.example.danif.hoponcmu.client.CommandHandlerImpl;
 import com.example.danif.hoponcmu.command.SignUpCommand;
 
@@ -74,6 +75,8 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        setResult(Constants.SIGNUP_FAILED);
+
         editUsername = (EditText) findViewById(R.id.signUpUsername);
         editCode = (EditText) findViewById(R.id.signUpCode);
 
@@ -90,6 +93,8 @@ public class SignUpActivity extends AppCompatActivity {
                     // TODO
                 }
                 if (SignUpActivity.this.loggedIn) {
+                    // login()
+                    setResult(Constants.SIGNUP_OK);
                     SignUpActivity.this.finish();
                 }
             }

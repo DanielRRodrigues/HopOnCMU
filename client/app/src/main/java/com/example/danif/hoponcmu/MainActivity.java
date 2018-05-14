@@ -8,36 +8,58 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.example.danif.hoponcmu.DataObejcts.Question;
-import com.example.danif.hoponcmu.DataObejcts.Quizz;
+import com.example.danif.hoponcmu.DataObjects.Constants;
+import com.example.danif.hoponcmu.DataObjects.Question;
+import com.example.danif.hoponcmu.DataObjects.Quiz;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private boolean loggedIn = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Tests
         testingQuizzes();
 
-        Intent intent = new Intent(this, CredentialsActivity.class);
-        startActivity(intent);
+        if (!this.loggedIn) {
+            this.authenticate();
+        }
 
-        ListAdapter quizzAdapter = new CustomQuizzListAdapter(this, Quizz.quizzes);
+        ListAdapter quizzAdapter = new CustomQuizListAdapter(this, Quiz.quizzes);
         final ListView quizzListView = (ListView) findViewById(R.id.quizzListView);
         quizzListView.setAdapter(quizzAdapter);
 
         quizzListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Quizz item = (Quizz) quizzListView.getItemAtPosition(position);
+                Quiz item = (Quiz) quizzListView.getItemAtPosition(position);
                 Intent intent = new Intent(getApplicationContext(), QuestionActivity.class);
-                intent.putExtra("Quizz", item);
+                intent.putExtra("Quiz", item);
                 startActivity(intent);
             }
         });
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.REQUEST_AUTH) {
+            if (resultCode == Constants.AUTH_OK) {
+                this.loggedIn = true;
+            } else {  // resultCode == Constants.AUTH_FAILED
+                this.finish();
+            }
+        }
+    }
+
+    private void authenticate() {
+        Intent intent = new Intent(this, CredentialsActivity.class);
+        startActivityForResult(intent, Constants.REQUEST_AUTH);
     }
 
     public void testingQuizzes() {
@@ -55,12 +77,12 @@ public class MainActivity extends AppCompatActivity {
         questions.add(question2);
         questions.add(question3);
         questions.add(question4);
-        Quizz quizz1 = new Quizz("Quizz1", questions);
-        new Quizz("quizz2", null);
-        new Quizz("Quizz3", null);
-        new Quizz("Quizz4", null);
+        Quiz quiz1 = new Quiz("Quizz1", questions);
+        new Quiz("quizz2", null);
+        new Quiz("Quizz3", null);
+        new Quiz("Quizz4", null);
 
-        System.out.println("------- " + Integer.toString(Quizz.quizzes.size()));
+        System.out.println("------- " + Integer.toString(Quiz.quizzes.size()));
 
     }
 }

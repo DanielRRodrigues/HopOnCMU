@@ -1,4 +1,4 @@
-package com.example.danif.hoponcmu.DataObejcts;
+package com.example.danif.hoponcmu.DataObjects;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,13 +7,13 @@ import java.util.ArrayList;
  * Created by danif on 4/26/2018.
  */
 
-public class Quizz implements Serializable{
+public class Quiz implements Serializable{
     private ArrayList<Question> _questions;
     private String _title;
 
-    public static ArrayList<Quizz> quizzes = new ArrayList<Quizz>();
+    public static ArrayList<Quiz> quizzes = new ArrayList<Quiz>();
 
-    public Quizz(String title, ArrayList<Question> questions) {
+    public Quiz(String title, ArrayList<Question> questions) {
         _questions = questions;
         _title = title;
 

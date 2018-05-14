@@ -1,4 +1,4 @@
-package com.example.danif.hoponcmu.DataObejcts;
+package com.example.danif.hoponcmu.DataObjects;
 
 import java.io.Serializable;
 import java.util.ArrayList;

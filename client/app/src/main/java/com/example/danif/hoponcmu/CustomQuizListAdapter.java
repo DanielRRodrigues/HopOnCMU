@@ -7,16 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.danif.hoponcmu.DataObejcts.Quizz;
+import com.example.danif.hoponcmu.DataObjects.Quiz;
 
 import java.util.ArrayList;
 
-public class CustomQuizzListAdapter extends ArrayAdapter<Quizz> {
+public class CustomQuizListAdapter extends ArrayAdapter<Quiz> {
 
-    CustomQuizzListAdapter(Context context, ArrayList<Quizz> quizzes) {
+    CustomQuizListAdapter(Context context, ArrayList<Quiz> quizzes) {
         super(context, R.layout.custom_quizz_row, quizzes);
 
     }
@@ -27,7 +26,7 @@ public class CustomQuizzListAdapter extends ArrayAdapter<Quizz> {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         View customView = layoutInflater.inflate(R.layout.custom_quizz_row, parent, false);
 
-        Quizz item = getItem(position);
+        Quiz item = getItem(position);
         TextView txtQuizz = (TextView) customView.findViewById(R.id.txtQuizzListView);
         txtQuizz.setText(item.getTitle());
 
