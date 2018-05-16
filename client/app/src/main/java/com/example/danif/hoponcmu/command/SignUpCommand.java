@@ -6,19 +6,19 @@ package com.example.danif.hoponcmu.command;
 
 public class SignUpCommand implements Command {
 
-    private static final long serialVersionUID = -7490260852113884025L;
+  private static final long serialVersionUID = -7490260852113884025L;
 
-    private String _username;
-    private String _code;
+  private String username;
+  private String code;
 
-    public SignUpCommand(String username, String code) {
-        _username = username;
-        _code = code;
-    }
+  public SignUpCommand(String username, String code) {
+    this.username = username;
+    this.code = code;
+  }
 
-    @Override
-    public void handle(CommandHandler ch) {
-        ch.handle(this);
-    }
+  @Override
+  public void handle(CommandHandler ch) {
+    ch.handle(this);
+  }
 
 }

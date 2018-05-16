@@ -8,28 +8,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import com.example.danif.hoponcmu.DataObjects.Quiz;
-
 import java.util.ArrayList;
 
 public class CustomQuizListAdapter extends ArrayAdapter<Quiz> {
 
-    CustomQuizListAdapter(Context context, ArrayList<Quiz> quizzes) {
-        super(context, R.layout.custom_quiz_row, quizzes);
+  public CustomQuizListAdapter(Context context, ArrayList<Quiz> quizzes) {
+    super(context, R.layout.custom_quiz_row, quizzes);
+  }
 
-    }
+  @NonNull
+  @Override
+  public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+    View customView = layoutInflater.inflate(R.layout.custom_quiz_row, parent, false);
 
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        View customView = layoutInflater.inflate(R.layout.custom_quiz_row, parent, false);
+    Quiz item = getItem(position);
+    TextView txtQuiz = (TextView) customView.findViewById(R.id.text_quiz);
+    txtQuiz.setText(item.getTitle());
 
-        Quiz item = getItem(position);
-        TextView txtQuizz = (TextView) customView.findViewById(R.id.txtQuizListView);
-        txtQuizz.setText(item.getTitle());
-
-        return customView;
-    }
+    return customView;
+  }
 }
