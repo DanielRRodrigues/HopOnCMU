@@ -12,6 +12,7 @@ public final class Constants {
   public static final String TOAST_SIGNUP_SUCCESS = "Signed up with success";
   public static final String TOAST_DOWNLOAD_QUIZZES_SUCCESS = "Quizzes downloaded";
   public static final String TOAST_DOWNLOAD_QUIZZES_FAILED = "Failed to download quizzes";
+  public static final String TOAST_QUIZ_SUBMITED = "Quiz submited";
 
   public static final String EXTRA_QUIZ = "Quiz";
 

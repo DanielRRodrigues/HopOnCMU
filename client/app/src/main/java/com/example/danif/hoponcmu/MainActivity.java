@@ -115,16 +115,33 @@ public class MainActivity extends AppCompatActivity {
 
   private void testingQuizzes() {
     this.currentMonument = "TestMonument";
-    Question testQuestion = new Question("TestQuestion", "C");
-    testQuestion.addOption("A");
-    testQuestion.addOption("B");
-    testQuestion.addOption("C");
-    testQuestion.addOption("D");
+    //Question 1
+    Question testQuestion1 = new Question("TestQuestion1", "C");
+    testQuestion1.addOption("A");
+    testQuestion1.addOption("B");
+    testQuestion1.addOption("C");
+    testQuestion1.addOption("D");
+    //Question 2
+    Question testQuestion2 = new Question("TestQuestion2", "C");
+    testQuestion2.addOption("A");
+    testQuestion2.addOption("B");
+    testQuestion2.addOption("C");
+    testQuestion2.addOption("D");
+    //Question 3
+    Question testQuestion3 = new Question("TestQuestion3", "C");
+    testQuestion3.addOption("A");
+    testQuestion3.addOption("B");
+    testQuestion3.addOption("C");
+    testQuestion3.addOption("D");
     Quiz testQuiz = new Quiz("TestQuiz");
-    testQuiz.addQuestion(testQuestion);
-    testQuiz.addQuestion(testQuestion);
-    testQuiz.addQuestion(testQuestion);
-    testQuiz.addQuestion(testQuestion);
+    this.quizzesList.add(new Quiz("TestQuiz2"));
+    this.quizzesList.add(new Quiz("TestQuiz3"));
+    this.quizzesList.add(new Quiz("TestQuiz4"));
+    this.quizzesList.add(new Quiz("TestQuiz5"));
+    testQuiz.addQuestion(testQuestion1);
+    testQuiz.addQuestion(testQuestion1);
+    testQuiz.addQuestion(testQuestion2);
+    testQuiz.addQuestion(testQuestion3);
     this.quizzesList.add(testQuiz);
     Log.d(Constants.LOG_TAG, "Quiz questions: " + Integer.toString(testQuiz.getQuestions().size()));
   }

@@ -17,6 +17,15 @@
     android:id="@+id/list_questions"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp">
+    android:layout_marginTop="10dp"
+    android:layout_weight="1">
   </ListView>
+
+  <Button
+      android:id="@+id/btnSubmit"
+      android:text="Submit"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_margin="5dp"/>
 </LinearLayout>

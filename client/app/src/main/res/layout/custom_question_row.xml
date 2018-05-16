@@ -5,31 +5,34 @@
   android:orientation="vertical">
 
   <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"/>
-
-  <LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-    <CheckedTextView
-      android:id="@+id/checkTextOption1"
+      android:id="@+id/txtQuestion_CustomAdapter"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:layout_marginLeft="5dp"/>
 
-    <CheckedTextView
-      android:id="@+id/checkTextOption2"
+  <RadioGroup
+      android:orientation="vertical"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
+      android:layout_height="wrap_content"
+      android:layout_margin="10dp">
 
-    <CheckedTextView
-      android:id="@+id/checkTextOption3"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
-    <CheckedTextView
-      android:id="@+id/checkTextOption4"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
-  </LinearLayout>
+    <RadioButton
+        android:id="@+id/radioOption1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <RadioButton
+        android:id="@+id/radioOption2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <RadioButton
+        android:id="@+id/radioOption3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <RadioButton
+        android:id="@+id/radioOption4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+  </RadioGroup>
 
 </LinearLayout>
