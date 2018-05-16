@@ -5,7 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical"
-  tools:context="com.example.danif.hoponcmu.com.example.danif.cmu.QuizActivity">
+  tools:context="pt.ulisboa.tecnico.cmu.QuizActivity">
 
   <TextView
     android:id="@+id/text_quiz_title"
@@ -16,16 +16,16 @@
   <ListView
     android:id="@+id/list_questions"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="0dp"
     android:layout_marginTop="10dp"
     android:layout_weight="1">
   </ListView>
 
   <Button
-      android:id="@+id/btnSubmit"
-      android:text="Submit"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:layout_margin="5dp"/>
+    android:id="@+id/button_submit"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:layout_gravity="center_horizontal"
+    android:text="@string/action_submit"/>
 </LinearLayout>

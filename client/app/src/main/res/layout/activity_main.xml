@@ -5,7 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical"
-  tools:context="com.example.danif.hoponcmu.com.example.danif.cmu.MainActivity">
+  tools:context="pt.ulisboa.tecnico.cmu.MainActivity">
 
   <LinearLayout
     android:layout_width="345dp"
@@ -45,21 +45,27 @@
   <ListView
     android:id="@+id/list_quizzes"
     android:layout_width="fill_parent"
-    android:layout_height="331dp"
+    android:layout_height="316dp"
     android:layout_marginTop="15dp"></ListView>
 
   <LinearLayout
-    android:layout_width="103dp"
-    android:layout_height="36dp"
+    android:layout_width="274dp"
+    android:layout_height="49dp"
     android:layout_margin="25dp"
     android:layout_gravity="center_horizontal"
     android:orientation="horizontal">
 
     <Button
-      android:id="@+id/button_logout"
-      android:layout_width="100dp"
+      android:id="@+id/button_finish_day"
+      android:layout_width="130dp"
       android:layout_height="wrap_content"
-      android:layout_marginRight="40dp"
+      android:layout_weight="1"
+      android:layout_marginRight="20dp"
+      android:text="@string/action_finish_day"/>
+    <Button
+      android:id="@+id/button_logout"
+      android:layout_width="125dp"
+      android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
       android:text="@string/action_logout"
       android:textSize="12sp"/>

@@ -43,7 +43,7 @@ public class QuizActivity extends AppCompatActivity {
     this.quizAdapter = new CustomQuestionListAdapter(this, this.quiz.getQuestions());
     this.listQuestions.setAdapter(this.quizAdapter);
 
-    this.btnSubmit = (Button) findViewById(pt.ulisboa.tecnico.cmu.R.id.btnSubmit);
+    this.btnSubmit = (Button) findViewById(R.id.button_submit);
     this.btnSubmit.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
