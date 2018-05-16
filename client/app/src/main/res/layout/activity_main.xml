@@ -5,7 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical"
-  tools:context="com.example.danif.hoponcmu.MainActivity">
+  tools:context="com.example.danif.hoponcmu.com.example.danif.cmu.MainActivity">
 
   <LinearLayout
     android:layout_width="345dp"

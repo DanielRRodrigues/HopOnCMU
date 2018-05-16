@@ -6,7 +6,7 @@
   android:layout_height="match_parent"
   android:gravity="center_horizontal"
   android:orientation="vertical"
-  tools:context="com.example.danif.hoponcmu.SignUpActivity">
+  tools:context="com.example.danif.hoponcmu.com.example.danif.cmu.SignUpActivity">
 
   <EditText
     android:id="@+id/edit_username"
