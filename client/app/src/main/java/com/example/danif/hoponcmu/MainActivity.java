@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
   private Button btnLogOut;
   private Button btnDownloadQuizzes;
   private Button btnRanking;
+  private Button btnFinishDay;
+  private Button btnLocations;
   private ListAdapter adapterQuiz;
   private ListView listQuizzes;
 
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     this.btnLogOut = (Button) findViewById(R.id.button_logout);
     this.btnDownloadQuizzes = (Button) findViewById(R.id.button_download_quizzes);
     this.btnRanking = (Button) findViewById(R.id.button_ranking);
+    this.btnFinishDay = (Button) findViewById(R.id.button_finish_day);
+    this.btnLocations = (Button) findViewById(R.id.button_locations);
     this.listQuizzes = (ListView) findViewById(R.id.list_quizzes);
     this.listQuizzes.setAdapter(this.adapterQuiz);
 
@@ -73,6 +77,20 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void onClick(View view) {
         Log.d(Constants.LOG_TAG, "onClick info: Ranking");
+      }
+    });
+
+    this.btnFinishDay.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Toast.makeText(MainActivity.this, Constants.TOAST_DAY_FINISHED, Toast.LENGTH_SHORT).show();
+      }
+    });
+
+    this.btnLocations.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Log.d(Constants.LOG_TAG, "onClick info: Locations");
       }
     });
 

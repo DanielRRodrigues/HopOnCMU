@@ -31,14 +31,14 @@ public class CustomQuestionListAdapter extends ArrayAdapter<Question> {
         View customView = layoutInflater.inflate(R.layout.custom_question_row, parent, false);
 
         Question item = getItem(position);
-        TextView txtQuestion = (TextView) customView.findViewById(R.id.txtQuestion_CustomAdapter);
+        TextView txtQuestion = (TextView) customView.findViewById(R.id.text_question_adapter);
         txtQuestion.setText(item.getText());
 
         List<String> options = item.getOptions();
-        RadioButton checkOption1 = (RadioButton) customView.findViewById(R.id.radioOption1);
-        RadioButton checkOption2 = (RadioButton) customView.findViewById(R.id.radioOption2);
-        RadioButton checkOption3 = (RadioButton) customView.findViewById(R.id.radioOption3);
-        RadioButton checkOption4 = (RadioButton) customView.findViewById(R.id.radioOption4);
+        RadioButton checkOption1 = (RadioButton) customView.findViewById(R.id.radio_option_0);
+        RadioButton checkOption2 = (RadioButton) customView.findViewById(R.id.radio_option_1);
+        RadioButton checkOption3 = (RadioButton) customView.findViewById(R.id.radio_option_2);
+        RadioButton checkOption4 = (RadioButton) customView.findViewById(R.id.radio_option_3);
 
         checkOption1.setText(options.get(0));
         checkOption2.setText(options.get(1));
