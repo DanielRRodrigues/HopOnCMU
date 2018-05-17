@@ -1,19 +1,19 @@
 <resources>
-  <string name="app_name">HopOnCMU</string>
+    <string name="app_name">HopOnCMU</string>
 
-  <string name="action_login">Login</string>
-  <string name="action_signup">Sign Up</string>
-  <string name="action_logout">Logout</string>
-  <string name="action_location">Locations</string>
-  <string name="action_download_quizzes">Download Quizzes</string>
-  <string name="action_ranking">Ranking</string>
-  <string name="action_submit">Submit</string>
-  <string name="action_finish_day">Finish Day</string>
+    <string name="action_login">Login</string>
+    <string name="action_signup">Sign Up</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_location">Locations</string>
+    <string name="action_download_quizzes">Download Quizzes</string>
+    <string name="action_ranking">Ranking</string>
+    <string name="action_submit">Submit</string>
+    <string name="action_finish_day">Finish Day</string>
 
-  <string name="login_username_hint">Username</string>
-  <string name="login_code_hint">Code</string>
+    <string name="login_username_hint">Username</string>
+    <string name="login_code_hint">Code</string>
 
-  <string name="signup_username_hint">Username</string>
-  <string name="signup_code_hint">Code</string>
-  <string name="title_activity_locations">LocationsActivity</string>
+    <string name="signup_username_hint">Username</string>
+    <string name="signup_code_hint">Code</string>
+    <string name="title_activity_locations">LocationsActivity</string>
 </resources>
