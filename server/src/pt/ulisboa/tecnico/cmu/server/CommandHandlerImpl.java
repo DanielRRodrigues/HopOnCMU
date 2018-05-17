@@ -1,20 +1,22 @@
 package pt.ulisboa.tecnico.cmu.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pt.ulisboa.tecnico.cmu.command.CommandHandler;
 import pt.ulisboa.tecnico.cmu.command.DownloadQuizzesCommand;
 import pt.ulisboa.tecnico.cmu.command.HelloCommand;
-import pt.ulisboa.tecnico.cmu.command.LogInCommand;
+import pt.ulisboa.tecnico.cmu.command.LoginCommand;
 import pt.ulisboa.tecnico.cmu.command.SignUpCommand;
 import pt.ulisboa.tecnico.cmu.response.HelloResponse;
 import pt.ulisboa.tecnico.cmu.response.Response;
 
 public class CommandHandlerImpl implements CommandHandler {
-	
-	private List<String> availableCodes = new ArrayList<String>();
-	private List<Account> accounts = new ArrayList<Account>();
+
+	private Map<String, Account> sessions = new HashMap<String, Account>();
+	private List<Tour> tours = new ArrayList<Tour>();
 
 	@Override
 	public Response handle(HelloCommand hc) {
@@ -29,7 +31,7 @@ public class CommandHandlerImpl implements CommandHandler {
 	}
 
 	@Override
-	public Response handle(LogInCommand lc) {
+	public Response handle(LoginCommand lc) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -39,5 +41,5 @@ public class CommandHandlerImpl implements CommandHandler {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 }

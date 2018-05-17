@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import pt.ulisboa.tecnico.cmu.command.LogInCommand;
+import pt.ulisboa.tecnico.cmu.command.LoginCommand;
 
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
       // Random used for test purpose
       LoginActivity.this.loggedIn = new Random().nextBoolean();
 
-      LogInCommand suc = new LogInCommand(this.username, this.code);
+      LoginCommand suc = new LoginCommand(this.username, this.code);
       // suc.handle(chi);
       // TODO: 16/05/2018
 

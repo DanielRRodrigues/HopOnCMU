@@ -31,14 +31,14 @@ public class Server {
 		
 		while (true) {
 			try {
-			client = socket.accept();
-			
-			ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
-			Command cmd =  (Command) ois.readObject();
-			Response rsp = cmd.handle(chi);
-			
-			ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
-			oos.writeObject(rsp);
+				client = socket.accept();
+				
+				ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
+				Command cmd =  (Command) ois.readObject();
+				Response rsp = cmd.handle(chi);
+				
+				ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
+				oos.writeObject(rsp);
 
 			} catch (Exception e) {
 				e.printStackTrace();
