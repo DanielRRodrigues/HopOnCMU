@@ -20,7 +20,7 @@ import java.util.List;
  */
 
 public class CustomQuestionListAdapter extends ArrayAdapter<Question> {
-    public CustomQuestionListAdapter(@NonNull Context context, List<Question> questions) {
+    public CustomQuestionListAdapter(@NonNull Context context, ArrayList<Question> questions) {
         super(context, R.layout.custom_question_row, questions);
     }
 

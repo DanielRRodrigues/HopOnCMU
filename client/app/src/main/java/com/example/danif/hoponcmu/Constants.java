@@ -16,6 +16,7 @@ public final class Constants {
   public static final String TOAST_DAY_FINISHED = "Day finished";
 
   public static final String EXTRA_QUIZ = "Quiz";
+  public static final String EXTRA_TOUR = "Tour";
 
   public static final int REQUEST_AUTH = 10000;
   public static final int REQUEST_LOGIN = 10001;

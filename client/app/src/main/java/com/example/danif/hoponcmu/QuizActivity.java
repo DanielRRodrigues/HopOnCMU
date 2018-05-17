@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.danif.hoponcmu.DataObjects.Quiz;
+import java.util.ArrayList;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -35,7 +36,7 @@ public class QuizActivity extends AppCompatActivity {
 
     this.textQuizTitle.setText(this.quiz.getTitle());
 
-    this.quizAdapter = new CustomQuestionListAdapter(this, this.quiz.getQuestions());
+    this.quizAdapter = new CustomQuestionListAdapter(this, (ArrayList) this.quiz.getQuestions());
     this.listQuestions.setAdapter(this.quizAdapter);
 
     this.btnSubmit = (Button) findViewById(R.id.button_submit);

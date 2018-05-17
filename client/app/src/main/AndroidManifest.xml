@@ -22,6 +22,11 @@
     <activity android:name=".LoginActivity"/>
     <activity android:name=".SignUpActivity"/>
     <activity android:name=".QuizActivity"/>
+    <activity
+      android:label="@string/title_activity_locations"
+      android:name=".LocationsActivity"
+      android:theme="@style/AppTheme.NoActionBar">
+    </activity>
   </application>
 
 </manifest>

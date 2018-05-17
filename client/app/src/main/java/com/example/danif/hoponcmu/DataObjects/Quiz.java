@@ -51,6 +51,15 @@ public class Quiz implements Serializable {
     this.title = title;
   }
 
+  public Question getQuestionByText(String text) {
+    for (Question q : this.questions) {
+      if (q.getText().equals(text)) {
+        return q;
+      }
+    }
+    return null;
+  }
+
   public List<Question> getQuestions() {
     return this.questions;
   }

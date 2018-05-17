@@ -11,8 +11,10 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import com.example.danif.hoponcmu.DataObjects.Location;
 import com.example.danif.hoponcmu.DataObjects.Question;
 import com.example.danif.hoponcmu.DataObjects.Quiz;
+import com.example.danif.hoponcmu.DataObjects.Tour;
 import com.example.danif.hoponcmu.client.CommandHandlerImpl;
 import com.example.danif.hoponcmu.command.DownloadQuizzesCommand;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
   private boolean loggedIn = false;
   private String currentMonument;
   private List<Quiz> quizzesList = new ArrayList<Quiz>();
+  private Tour tour;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +93,9 @@ public class MainActivity extends AppCompatActivity {
     this.btnLocations.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        Log.d(Constants.LOG_TAG, "onClick info: Locations");
+        Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
+        intent.putExtra(Constants.EXTRA_TOUR, MainActivity.this.tour);
+        startActivity(intent);
       }
     });
 
@@ -162,6 +167,14 @@ public class MainActivity extends AppCompatActivity {
     testQuiz.addQuestion(testQuestion3);
     this.quizzesList.add(testQuiz);
     Log.d(Constants.LOG_TAG, "Quiz questions: " + Integer.toString(testQuiz.getQuestions().size()));
+    // Locations
+    List<Location> testLocations = new ArrayList<Location>();
+    testLocations.add(new Location("L1"));
+    testLocations.add(new Location("L2"));
+    testLocations.add(new Location("L3"));
+    testLocations.add(new Location("L4"));
+    this.tour = new Tour("TestTour", testLocations);
+    Log.d(Constants.LOG_TAG, "Tour locations: " + Integer.toString(this.tour.getLocations().size()));
   }
 
   public class DownloadQuizzesAction extends AsyncTask<Void, Void, Void> {
