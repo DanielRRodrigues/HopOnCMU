@@ -18,6 +18,7 @@ import java.util.concurrent.ExecutionException;
 import pt.ulisboa.tecnico.cmu.DataObjects.Location;
 import pt.ulisboa.tecnico.cmu.DataObjects.Question;
 import pt.ulisboa.tecnico.cmu.DataObjects.Quiz;
+import pt.ulisboa.tecnico.cmu.DataObjects.Score;
 import pt.ulisboa.tecnico.cmu.DataObjects.Tour;
 import pt.ulisboa.tecnico.cmu.command.DownloadQuizzesCommand;
 
@@ -79,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void onClick(View view) {
         Log.d(Constants.LOG_TAG, "onClick info: Ranking");
+        Intent intent = new Intent(getApplicationContext(), RankingActivity.class);
+        intent.putExtra(Constants.EXTRA_TOUR, MainActivity.this.tour);
+        startActivity(intent);
       }
     });
 
@@ -173,6 +177,10 @@ public class MainActivity extends AppCompatActivity {
     testLocations.add(new Location("L3"));
     testLocations.add(new Location("L4"));
     this.tour = new Tour("TestTour", testLocations);
+    this.tour.addScore(new Score("score1", 1));
+    this.tour.addScore(new Score("score2", 2));
+    this.tour.addScore(new Score("score3", 3));
+    this.tour.addScore(new Score("score4", 4));
     Log.d(Constants.LOG_TAG,
         "Tour locations: " + Integer.toString(this.tour.getLocations().size()));
   }
