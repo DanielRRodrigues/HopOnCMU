@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.example.danif.hoponcmu">
+  package="pt.ulisboa.tecnico.cmu">
 
   <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -11,7 +11,7 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
-    <activity android:name=".MainActivity">
+    <activity android:name="pt.ulisboa.tecnico.cmu.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
@@ -22,11 +22,7 @@
     <activity android:name=".LoginActivity"/>
     <activity android:name=".SignUpActivity"/>
     <activity android:name=".QuizActivity"/>
-    <activity
-      android:label="@string/title_activity_locations"
-      android:name=".LocationsActivity"
-      android:theme="@style/AppTheme.NoActionBar">
-    </activity>
+    <activity android:name=".LocationsActivity"/>
   </application>
 
 </manifest>

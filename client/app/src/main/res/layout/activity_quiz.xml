@@ -5,7 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical"
-  tools:context="com.example.danif.hoponcmu.QuizActivity">
+  tools:context="pt.ulisboa.tecnico.cmu.QuizActivity">
 
   <TextView
     android:id="@+id/text_quiz_title"
