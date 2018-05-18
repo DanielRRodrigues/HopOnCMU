@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmu;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,18 +10,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import pt.ulisboa.tecnico.cmu.client.ResponseHandlerImpl;
 import pt.ulisboa.tecnico.cmu.command.LoginCommand;
 
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
+import pt.ulisboa.tecnico.cmu.response.LoginResponse;
 
 public class LoginActivity extends AppCompatActivity {
+
+  public static String sessionId = null;
 
   private EditText etUsername;
   private EditText etCode;
   private Button btnLogin;
-
-  private boolean loggedIn = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +49,9 @@ public class LoginActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
           Log.d(Constants.LOG_TAG, "onClick error: ExecutionException");
         }
-        if (LoginActivity.this.loggedIn) {
-          // login()
-          // TODO: 16/05/2018
+        if (LoginActivity.sessionId != null) {
+          Intent resultIntent = new Intent();
+          resultIntent.putExtra(Constants.EXTRA_SESSION_ID, LoginActivity.sessionId);
           setResult(Constants.LOGIN_OK);
           LoginActivity.this.finish();
         }
@@ -77,13 +83,33 @@ public class LoginActivity extends AppCompatActivity {
         return null;
       }
 
-      // Random used for test purpose
-      LoginActivity.this.loggedIn = new Random().nextBoolean();
+      Socket server = null;
+      ResponseHandlerImpl rhi = new ResponseHandlerImpl();
+      LoginCommand lc = new LoginCommand(this.username, this.code);
 
-      LoginCommand suc = new LoginCommand(this.username, this.code);
-      // suc.handle(chi);
-      // TODO: 16/05/2018
+      try {
+        server = new Socket(MainActivity.HOST, MainActivity.PORT);
 
+        ObjectOutputStream oos = new ObjectOutputStream(server.getOutputStream());
+        oos.writeObject(lc);
+
+        ObjectInputStream ois = new ObjectInputStream(server.getInputStream());
+        LoginResponse lr = (LoginResponse) ois.readObject();
+        lr.handle(rhi);
+
+        oos.close();
+        ois.close();
+        Log.d(Constants.LOG_TAG, "LoginAction");
+      }
+      catch (Exception e) {
+        Log.d(Constants.LOG_TAG, "LoginAction failed..." + e.getMessage());
+        e.printStackTrace();
+      } finally {
+        if (server != null) {
+          try { server.close(); }
+          catch (Exception e) { }
+        }
+      }
       return null;
     }
 
@@ -95,10 +121,10 @@ public class LoginActivity extends AppCompatActivity {
       if (this.emptyCode) {
         LoginActivity.this.editCodeSetError(Constants.ERROR_EMPTY_EDIT_TEXT);
       }
-      if (!this.emptyCode && !this.emptyUsername && !LoginActivity.this.loggedIn) {
+      if (!this.emptyCode && !this.emptyUsername && LoginActivity.sessionId == null) {
         Toast.makeText(LoginActivity.this, Constants.TOAST_LOGIN_FAILED, Toast.LENGTH_SHORT).show();
       }
-      if (LoginActivity.this.loggedIn) {
+      if (LoginActivity.sessionId != null) {
         Toast.makeText(LoginActivity.this, Constants.TOAST_LOGIN_SUCCESS, Toast.LENGTH_SHORT)
             .show();
       }

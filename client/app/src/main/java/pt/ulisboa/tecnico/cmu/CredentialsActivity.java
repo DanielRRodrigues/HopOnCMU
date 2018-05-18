@@ -44,7 +44,7 @@ public class CredentialsActivity extends AppCompatActivity {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == Constants.REQUEST_LOGIN) {
       if (resultCode == Constants.LOGIN_OK) {
-        setResult(Constants.AUTH_OK);
+        setResult(Constants.AUTH_OK, data);
         this.finish();
       } else {  // resultCode == Constants.LOGIN_FAILED
         // Do Nothing

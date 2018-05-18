@@ -97,8 +97,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         ObjectInputStream ois = new ObjectInputStream(server.getInputStream());
         SignUpResponse sur = (SignUpResponse) ois.readObject();
-
-        rhi.handle(sur);
+        sur.handle(rhi);
 
         oos.close();
         ois.close();

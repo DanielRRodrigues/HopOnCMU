@@ -1,12 +1,12 @@
 package pt.ulisboa.tecnico.cmu.response;
 
-public class SignUpResponse implements Response {
+public class LoginResponse implements Response {
 
-	private static final long serialVersionUID = 5902122372240663924L;
+	private static final long serialVersionUID = 3532085036234447629L;
 
 	private String sessionId;
 
-	public SignUpResponse(String sessionId) {
+	public LoginResponse(String sessionId) {
 		this.sessionId = sessionId;
 	}
 

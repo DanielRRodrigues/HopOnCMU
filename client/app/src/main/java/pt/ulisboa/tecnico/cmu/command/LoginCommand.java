@@ -4,7 +4,7 @@ import pt.ulisboa.tecnico.cmu.response.Response;
 
 public class LoginCommand implements Command {
 
-  private static final long serialVersionUID = -8464572709559954332L;
+  private static final long serialVersionUID = 376009019875211029L;
 
   private String username;
   private String code;
@@ -17,6 +17,14 @@ public class LoginCommand implements Command {
   @Override
   public Response handle(CommandHandler ch) {
     return ch.handle(this);
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public String getCode() {
+    return code;
   }
 
 }

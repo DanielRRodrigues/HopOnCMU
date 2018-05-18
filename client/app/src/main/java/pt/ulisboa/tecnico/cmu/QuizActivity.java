@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmu;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -10,12 +9,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.util.ArrayList;
 import pt.ulisboa.tecnico.cmu.DataObjects.Quiz;
-import pt.ulisboa.tecnico.cmu.command.HelloCommand;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -48,21 +43,6 @@ public class QuizActivity extends AppCompatActivity {
       public void onClick(View view) {
         Toast.makeText(getApplicationContext(), Constants.TOAST_QUIZ_SUBMITED,
             Toast.LENGTH_SHORT).show();
-
-        AsyncTask.execute(new Runnable() {
-          @Override
-          public void run() {
-            HelloCommand hc = new HelloCommand("huehuehe");
-            Socket server = null;
-            try {
-              server = new Socket("10.0.2.2", 9090);
-              ObjectOutputStream oos = new ObjectOutputStream(server.getOutputStream());
-              oos.writeObject(hc);
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
-          }
-        });
         finish();
       }
     });

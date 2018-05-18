@@ -20,7 +20,6 @@ import pt.ulisboa.tecnico.cmu.DataObjects.Question;
 import pt.ulisboa.tecnico.cmu.DataObjects.Quiz;
 import pt.ulisboa.tecnico.cmu.DataObjects.Score;
 import pt.ulisboa.tecnico.cmu.DataObjects.Tour;
-import pt.ulisboa.tecnico.cmu.command.DownloadQuizzesCommand;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -199,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
       // Random used for test purpose
       this.mSuccessDownload = new Random().nextBoolean();
 
-      DownloadQuizzesCommand suc = new DownloadQuizzesCommand(MainActivity.this.currentMonument);
+      // DownloadQuizzesCommand suc = new DownloadQuizzesCommand(MainActivity.this.currentMonument);
       // suc.handle(chi);
       // TODO: 16/05/2018
 

@@ -2,8 +2,9 @@ package pt.ulisboa.tecnico.cmu.client;
 
 import android.util.Log;
 import pt.ulisboa.tecnico.cmu.Constants;
+import pt.ulisboa.tecnico.cmu.LoginActivity;
 import pt.ulisboa.tecnico.cmu.SignUpActivity;
-import pt.ulisboa.tecnico.cmu.response.HelloResponse;
+import pt.ulisboa.tecnico.cmu.response.LoginResponse;
 import pt.ulisboa.tecnico.cmu.response.ResponseHandler;
 import pt.ulisboa.tecnico.cmu.response.SignUpResponse;
 
@@ -12,12 +13,6 @@ import pt.ulisboa.tecnico.cmu.response.SignUpResponse;
  */
 
 public class ResponseHandlerImpl implements ResponseHandler {
-
-  @Override
-  public void handle(HelloResponse hr) {
-    String responseMessage = hr.getMessage();
-    System.out.println("Response from server: " + responseMessage);
-  }
 
   @Override
   public void handle(SignUpResponse sur) {
@@ -31,5 +26,19 @@ public class ResponseHandlerImpl implements ResponseHandler {
     Log.d(Constants.LOG_TAG, "handle: SignUpResponse -- " + sessionId);
     Log.d(Constants.LOG_TAG, "handle: SignUpResponse -- " + SignUpActivity.sessionId);
     Log.d(Constants.LOG_TAG, "------------------------ END -- handle: SignUpResponse");
+  }
+
+  @Override
+  public void handle(LoginResponse lr) {
+    Log.d(Constants.LOG_TAG, "------------------------ START -- handle: LoginResponse");
+    String sessionId = lr.getSessionId();
+    if (sessionId != null) {
+      LoginActivity.sessionId = sessionId;
+    } else {
+      LoginActivity.sessionId = null;
+    }
+    Log.d(Constants.LOG_TAG, "handle: LoginResponse -- " + sessionId);
+    Log.d(Constants.LOG_TAG, "handle: LoginResponse -- " + LoginActivity.sessionId);
+    Log.d(Constants.LOG_TAG, "------------------------ END -- handle: LoginResponse");
   }
 }
