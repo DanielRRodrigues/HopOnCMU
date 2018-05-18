@@ -36,9 +36,7 @@ import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocket;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketManager;
 import pt.inesc.termite.wifidirect.sockets.SimWifiP2pSocketServer;
 import pt.ulisboa.tecnico.cmu.DataObjects.Location;
-import pt.ulisboa.tecnico.cmu.DataObjects.Question;
 import pt.ulisboa.tecnico.cmu.DataObjects.Quiz;
-import pt.ulisboa.tecnico.cmu.DataObjects.Score;
 import pt.ulisboa.tecnico.cmu.DataObjects.Tour;
 import pt.ulisboa.tecnico.cmu.client.ResponseHandlerImpl;
 import pt.ulisboa.tecnico.cmu.command.DownloadQuizzesCommand;
@@ -132,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements SimWifiP2pManager
       public void onClick(View view) {
         Log.d(Constants.LOG_TAG, "onClick info: Ranking");
         Intent intent = new Intent(getApplicationContext(), RankingActivity.class);
-        intent.putExtra(Constants.EXTRA_TOUR, MainActivity.tour);
         startActivity(intent);
       }
     });
@@ -162,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements SimWifiP2pManager
         Quiz item = (Quiz) MainActivity.this.listQuizzes.getItemAtPosition(position);
         Intent intent = new Intent(getApplicationContext(), QuizActivity.class);
         intent.putExtra(Constants.EXTRA_QUIZ, item);
-        startActivity(intent);
+        startActivityForResult(intent, Constants.REQUEST_QUIZ_PLAY);
       }
     });
 
@@ -196,6 +193,17 @@ public class MainActivity extends AppCompatActivity implements SimWifiP2pManager
         }
       } else {  // resultCode == Constants.AUTH_FAILED
         this.finish();
+      }
+    }
+    if (requestCode == Constants.REQUEST_QUIZ_PLAY) {
+      if (resultCode == Constants.QUIZ_PLAY_FINISH) {
+        Quiz quiz = (Quiz) data.getSerializableExtra(Constants.EXTRA_QUIZ);
+        int correctAnswers = (int) data.getSerializableExtra(Constants.EXTRA_CORRECT_ANSWERS);
+        for (Quiz q : MainActivity.quizzesList) {
+          if (q.getTitle().equals(quiz.getTitle()))
+            q.complete();
+        }
+        this.updateQuizList();
       }
     }
   }

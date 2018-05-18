@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Score implements Serializable {
+public class Score implements Serializable, Comparable<Score> {
 
 	private static final long serialVersionUID = 5873448885151347406L;
 
@@ -16,6 +16,7 @@ public class Score implements Serializable {
 		this.tour = tour;
 		this.account = account;
 		this.quizzesScore = new HashMap<Quiz, Integer>();
+		this.account.setScore(this);
 	}
 
 	@Override
@@ -47,6 +48,13 @@ public class Score implements Serializable {
 		} else if (!tour.equals(other.tour))
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(Score other) {
+		int myTotal = this.getTotalScore();
+		int otherTotal = other.getTotalScore();
+		return myTotal > otherTotal ? -1 : myTotal < otherTotal ? 1 : 0;
 	}
 
 	public Tour getTour() {
@@ -90,5 +98,13 @@ public class Score implements Serializable {
 			totalScore += entry.getValue().intValue();
 		}
 		return totalScore;
+	}
+
+	public int getTotalQuestions() {
+		int totalQuestions = 0;
+		for (Quiz quiz : this.quizzesScore.keySet()) {
+			totalQuestions += quiz.getQuestions().size();
+		}
+		return totalQuestions;
 	}
 }

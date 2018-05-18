@@ -4,6 +4,8 @@ import pt.ulisboa.tecnico.cmu.response.Response;
 
 public class DownloadQuizzesCommand implements Command {
 
+  private static final long serialVersionUID = -3077194034639720475L;
+
   private String sessionId;
   private String currentLocation;
 

@@ -11,6 +11,7 @@ import pt.ulisboa.tecnico.cmu.command.GetTourDetailsCommand;
 import pt.ulisboa.tecnico.cmu.command.LoginCommand;
 import pt.ulisboa.tecnico.cmu.command.LogoutCommand;
 import pt.ulisboa.tecnico.cmu.command.SignUpCommand;
+import pt.ulisboa.tecnico.cmu.command.UpdateRankingCommand;
 import pt.ulisboa.tecnico.cmu.response.DownloadQuizzesResponse;
 import pt.ulisboa.tecnico.cmu.response.GetTourDetailsResponse;
 import pt.ulisboa.tecnico.cmu.response.LoginResponse;
@@ -18,7 +19,9 @@ import pt.ulisboa.tecnico.cmu.response.LogoutResponse;
 import pt.ulisboa.tecnico.cmu.response.QuestionResponseObject;
 import pt.ulisboa.tecnico.cmu.response.QuizResponseObject;
 import pt.ulisboa.tecnico.cmu.response.Response;
+import pt.ulisboa.tecnico.cmu.response.ScoreResponseObject;
 import pt.ulisboa.tecnico.cmu.response.SignUpResponse;
+import pt.ulisboa.tecnico.cmu.response.UpdateRankingResponse;
 
 public class CommandHandlerImpl implements CommandHandler {
 
@@ -141,6 +144,21 @@ public class CommandHandlerImpl implements CommandHandler {
 		return new DownloadQuizzesResponse(quizzesResponse);
 	}
 
+	public Response handle(UpdateRankingCommand urc) {
+		String sessionId = urc.getSessionId();
+		Account account = this.sessions.get(sessionId);
+		if (account == null)
+			return new UpdateRankingResponse(true);
+		Tour tour = account.getTour();
+		List<Score> scores = tour.getAllScores(true);
+		List<ScoreResponseObject> scoresResponse = new ArrayList<ScoreResponseObject>();
+		for (Score s : scores) {
+			scoresResponse.add(new ScoreResponseObject(s.getAccount()
+					.getUsername(), s.getTotalScore(), s.getTotalQuestions()));
+		}
+		return new UpdateRankingResponse(scoresResponse);
+	}
+
 	private Tour getTourById(String id) {
 		for (Tour t : this.tours) {
 			if (t.getId().equals(id))
@@ -184,11 +202,11 @@ public class CommandHandlerImpl implements CommandHandler {
 		testTour.addLocation(testLocation3);
 		testTour.addLocation(testLocation4);
 		// Quizzes
-		new Quiz("TestQuiz0", testLocation0, testQuestions);
-		new Quiz("TestQuiz1", testLocation0, testQuestions);
-		new Quiz("TestQuiz2", testLocation0, testQuestions);
-		new Quiz("TestQuiz44", testLocation1, testQuestions);
-		new Quiz("TestQuiz555", testLocation2, testQuestions);
+		Quiz testQuiz0 = new Quiz("TestQuiz0", testLocation0, testQuestions);
+		Quiz testQuiz1 = new Quiz("TestQuiz1", testLocation0, testQuestions);
+		Quiz testQuiz2 = new Quiz("TestQuiz2", testLocation0, testQuestions);
+		Quiz testQuiz3 = new Quiz("TestQuiz44", testLocation1, testQuestions);
+		Quiz testQuiz4 = new Quiz("TestQuiz555", testLocation2, testQuestions);
 		// Available account
 		Account testAccount = new Account("testUser", "TST125", testTour);
 		testAccount.setLastLocation(testLocation1);
@@ -198,6 +216,14 @@ public class CommandHandlerImpl implements CommandHandler {
 		Account usedAccount = new Account("usedUser", "TST126", testTour);
 		usedAccount.setSessionId("123455123");
 		testTour.addAccount(usedAccount);
+		// Scores
+		Score testScore0 = new Score(testTour, testAccount);
+		testScore0.updateQuizScore(testQuiz0, 0);
+		testScore0.updateQuizScore(testQuiz1, 3);
+		testScore0.updateQuizScore(testQuiz3, 1);
+		Score testScore1 = new Score(testTour, usedAccount);
+		testScore1.updateQuizScore(testQuiz0, 3);
+		testScore1.updateQuizScore(testQuiz2, 4);
 		// Add tour to server
 		this.tours.add(testTour);
 	}

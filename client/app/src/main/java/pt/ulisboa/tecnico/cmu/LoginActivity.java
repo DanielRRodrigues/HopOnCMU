@@ -9,15 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.concurrent.ExecutionException;
 import pt.ulisboa.tecnico.cmu.client.ResponseHandlerImpl;
 import pt.ulisboa.tecnico.cmu.command.LoginCommand;
-
-import java.util.Random;
-import java.util.concurrent.ExecutionException;
 import pt.ulisboa.tecnico.cmu.response.LoginResponse;
 
 public class LoginActivity extends AppCompatActivity {
@@ -54,8 +51,7 @@ public class LoginActivity extends AppCompatActivity {
           System.out.println("--- 1");
           Intent resultIntent = new Intent();
           resultIntent.putExtra(Constants.EXTRA_SESSION_ID, LoginActivity.sessionId);
-          setResult(Constants.LOGIN_OK, resultIntent
-          );
+          setResult(Constants.LOGIN_OK, resultIntent);
           LoginActivity.this.finish();
         }
       }
@@ -103,14 +99,15 @@ public class LoginActivity extends AppCompatActivity {
         oos.close();
         ois.close();
         Log.d(Constants.LOG_TAG, "LoginAction");
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         Log.d(Constants.LOG_TAG, "LoginAction failed..." + e.getMessage());
         e.printStackTrace();
       } finally {
         if (server != null) {
-          try { server.close(); }
-          catch (Exception e) { }
+          try {
+            server.close();
+          } catch (Exception e) {
+          }
         }
       }
       return null;

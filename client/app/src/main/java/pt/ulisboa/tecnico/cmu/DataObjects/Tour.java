@@ -8,16 +8,18 @@ public class Tour implements Serializable {
 
   private String name;
   private List<Location> locations;
-  private List<Score> scores = new ArrayList<Score>();
+  private List<Score> scores;
 
   public Tour(String name) {
     this.name = name;
     this.locations = new ArrayList<Location>();
+    this.scores = new ArrayList<Score>();
   }
 
   public Tour(String name, List<Location> locations) {
     this.name = name;
     this.locations = locations;
+    this.scores = new ArrayList<Score>();
   }
 
   public String getName() {
@@ -58,9 +60,8 @@ public class Tour implements Serializable {
     this.scores.add(score);
   }
 
-  public void updateScores() {
-    //TODO
-    //Should get the updated scores from server
+  public void updateScores(List<Score> scores) {
+    this.scores = new ArrayList<Score>(scores);
   }
 
   public void removeLocation(Location location) {

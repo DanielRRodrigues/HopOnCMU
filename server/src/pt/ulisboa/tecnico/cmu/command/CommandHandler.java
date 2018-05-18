@@ -13,4 +13,6 @@ public interface CommandHandler {
 	Response handle(GetTourDetailsCommand gtdc);
 
 	Response handle(DownloadQuizzesCommand dqc);
+
+	Response handle(UpdateRankingCommand urc);
 }
