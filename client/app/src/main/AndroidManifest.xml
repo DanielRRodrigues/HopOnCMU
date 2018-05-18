@@ -26,6 +26,7 @@
         <activity android:name=".QuizActivity" />
         <activity android:name=".LocationsActivity" />
         <activity android:name=".RankingActivity"></activity>
+        <service android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService" />
     </application>
 
 </manifest>
