@@ -82,6 +82,14 @@ public class Tour implements Serializable {
 		this.name = name;
 	}
 
+	public Location getLocationByName(String name) {
+		for (Location l : this.locations) {
+			if (l.getName().equals(name))
+				return l;
+		}
+		return null;
+	}
+
 	public List<Location> getLocations() {
 		return Collections.unmodifiableList(this.locations);
 	}

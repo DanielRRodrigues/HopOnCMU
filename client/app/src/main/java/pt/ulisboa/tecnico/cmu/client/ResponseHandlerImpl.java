@@ -5,13 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 import pt.ulisboa.tecnico.cmu.Constants;
 import pt.ulisboa.tecnico.cmu.DataObjects.Location;
+import pt.ulisboa.tecnico.cmu.DataObjects.Question;
+import pt.ulisboa.tecnico.cmu.DataObjects.Quiz;
 import pt.ulisboa.tecnico.cmu.DataObjects.Tour;
 import pt.ulisboa.tecnico.cmu.LoginActivity;
 import pt.ulisboa.tecnico.cmu.MainActivity;
 import pt.ulisboa.tecnico.cmu.SignUpActivity;
+import pt.ulisboa.tecnico.cmu.response.DownloadQuizzesResponse;
 import pt.ulisboa.tecnico.cmu.response.GetTourDetailsResponse;
 import pt.ulisboa.tecnico.cmu.response.LoginResponse;
 import pt.ulisboa.tecnico.cmu.response.LogoutResponse;
+import pt.ulisboa.tecnico.cmu.response.QuestionResponseObject;
+import pt.ulisboa.tecnico.cmu.response.QuizResponseObject;
 import pt.ulisboa.tecnico.cmu.response.ResponseHandler;
 import pt.ulisboa.tecnico.cmu.response.SignUpResponse;
 
@@ -85,8 +90,36 @@ public class ResponseHandlerImpl implements ResponseHandler {
       Log.d(Constants.LOG_TAG, "handle: GetTourDetailsResponse -- " + currentLocation);
       Log.d(Constants.LOG_TAG, "handle: GetTourDetailsResponse -- " + nextLocation);
     }
-    Log.d(Constants.LOG_TAG, "handle: GetTourDetailsResponse -- ");
     Log.d(Constants.LOG_TAG, "handle: GetTourDetailsResponse -- " + MainActivity.sessionId);
     Log.d(Constants.LOG_TAG, "------------------------ END -- handle: GetTourDetailsResponse");
+  }
+
+  @Override
+  public void handle(DownloadQuizzesResponse dqr) {
+    Log.d(Constants.LOG_TAG, "------------------------ START -- handle: DownloadQuizzesResponse");
+    boolean error = dqr.getError();
+    if (error) {
+      Log.d(Constants.LOG_TAG, "handle: DownloadQuizzesResponse -- ERROR");
+    } else {
+      MainActivity.quizzesUpdated = true;
+      List<QuizResponseObject> quizzes = dqr.getQuizzes();
+      Log.d(Constants.LOG_TAG, "handle: DownloadQuizzesResponse -- " + quizzes.size());
+      for (QuizResponseObject quiz : quizzes) {
+        String quizTitle = quiz.getTitle();
+        List<QuestionResponseObject> questions = quiz.getQuestions();
+        List<Question> newQuestions = new ArrayList<Question>();
+        for (QuestionResponseObject question : questions) {
+          newQuestions
+              .add(new Question(question.getText(), question.getOptions(), question.getAnswer()));
+        }
+        Quiz newQuiz = new Quiz(quizTitle, MainActivity.currentLocation, newQuestions);
+        if (!MainActivity.quizzesList.contains(newQuiz))
+          MainActivity.quizzesList.add(newQuiz);
+        Log.d(Constants.LOG_TAG, "handle: DownloadQuizzesResponse -- " + quizTitle);
+        Log.d(Constants.LOG_TAG, "handle: DownloadQuizzesResponse -- " + questions.size());
+      }
+    }
+    Log.d(Constants.LOG_TAG, "handle: DownloadQuizzesResponse -- " + MainActivity.sessionId);
+    Log.d(Constants.LOG_TAG, "------------------------ END -- handle: DownloadQuizzesResponse");
   }
 }

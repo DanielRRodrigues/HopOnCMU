@@ -9,4 +9,6 @@ public interface ResponseHandler {
 	void handle(LogoutResponse lr);
 
 	void handle(GetTourDetailsResponse gtdr);
+
+	void handle(DownloadQuizzesResponse dqr);
 }

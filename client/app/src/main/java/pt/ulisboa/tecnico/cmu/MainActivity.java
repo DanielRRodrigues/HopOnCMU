@@ -16,7 +16,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import pt.ulisboa.tecnico.cmu.DataObjects.Location;
 import pt.ulisboa.tecnico.cmu.DataObjects.Question;
@@ -24,8 +23,10 @@ import pt.ulisboa.tecnico.cmu.DataObjects.Quiz;
 import pt.ulisboa.tecnico.cmu.DataObjects.Score;
 import pt.ulisboa.tecnico.cmu.DataObjects.Tour;
 import pt.ulisboa.tecnico.cmu.client.ResponseHandlerImpl;
+import pt.ulisboa.tecnico.cmu.command.DownloadQuizzesCommand;
 import pt.ulisboa.tecnico.cmu.command.GetTourDetailsCommand;
 import pt.ulisboa.tecnico.cmu.command.LogoutCommand;
+import pt.ulisboa.tecnico.cmu.response.DownloadQuizzesResponse;
 import pt.ulisboa.tecnico.cmu.response.GetTourDetailsResponse;
 import pt.ulisboa.tecnico.cmu.response.LogoutResponse;
 
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
   public static Location currentLocation = new Location(null);
   public static Location nextLocation = new Location(null);
   public static Tour tour = null;
+  public static boolean quizzesUpdated = false;
+  public static List<Quiz> quizzesList = new ArrayList<Quiz>();
 
   private Button btnLogOut;
   private Button btnDownloadQuizzes;
@@ -46,24 +49,19 @@ public class MainActivity extends AppCompatActivity {
   private ListAdapter adapterQuiz;
   private ListView listQuizzes;
 
-  private List<Quiz> quizzesList = new ArrayList<Quiz>();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(pt.ulisboa.tecnico.cmu.R.layout.activity_main);
 
-    // Tests
-    this.testingQuizzes();
-
-    this.adapterQuiz = new CustomQuizListAdapter(this, (ArrayList) this.quizzesList);
     this.btnLogOut = (Button) findViewById(R.id.button_logout);
     this.btnDownloadQuizzes = (Button) findViewById(R.id.button_download_quizzes);
     this.btnRanking = (Button) findViewById(R.id.button_ranking);
     this.btnFinishDay = (Button) findViewById(R.id.button_finish_day);
     this.btnLocations = (Button) findViewById(R.id.button_locations);
     this.listQuizzes = (ListView) findViewById(R.id.list_quizzes);
-    this.listQuizzes.setAdapter(this.adapterQuiz);
+    this.updateQuizList();
 
     this.btnLogOut.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -76,8 +74,11 @@ public class MainActivity extends AppCompatActivity {
     this.btnDownloadQuizzes.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        AsyncTask<Void, Void, Void> task = new DownloadQuizzesAction();
-        task.execute();
+        if (connectedToLocation()) {
+          new GetTourDetailsAction().execute();
+          new DownloadQuizzesAction().execute();
+          MainActivity.this.updateQuizList();
+        }
       }
     });
 
@@ -102,9 +103,11 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void onClick(View view) {
         new GetTourDetailsAction().execute();
-        Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
-        intent.putExtra(Constants.EXTRA_TOUR, MainActivity.tour);
-        startActivity(intent);
+        if (MainActivity.tour != null) {
+          Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
+          intent.putExtra(Constants.EXTRA_TOUR, MainActivity.tour);
+          startActivity(intent);
+        }
       }
     });
 
@@ -135,6 +138,16 @@ public class MainActivity extends AppCompatActivity {
       if (resultCode == Constants.AUTH_OK) {
         String sessionId = (String) data.getSerializableExtra(Constants.EXTRA_SESSION_ID);
         MainActivity.sessionId = sessionId;
+        MainActivity.currentLocation = new Location(null);
+        MainActivity.nextLocation = new Location(null);
+        MainActivity.tour = null;
+        MainActivity.quizzesUpdated = false;
+        MainActivity.quizzesList = new ArrayList<Quiz>();
+        if (connectedToLocation()) {
+          new GetTourDetailsAction().execute();
+          new DownloadQuizzesAction().execute();
+          updateQuizList();
+        }
       } else {  // resultCode == Constants.AUTH_FAILED
         this.finish();
       }
@@ -157,43 +170,13 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  private void testingQuizzes() {
-    //Question 1
-    Question testQuestion1 = new Question("TestQuestion1", "C");
-    testQuestion1.addOption("A");
-    testQuestion1.addOption("B");
-    testQuestion1.addOption("C");
-    testQuestion1.addOption("D");
-    //Question 2
-    Question testQuestion2 = new Question("TestQuestion2", "C");
-    testQuestion2.addOption("A");
-    testQuestion2.addOption("B");
-    testQuestion2.addOption("C");
-    testQuestion2.addOption("D");
-    //Question 3
-    Question testQuestion3 = new Question("TestQuestion3", "C");
-    testQuestion3.addOption("A");
-    testQuestion3.addOption("B");
-    testQuestion3.addOption("C");
-    testQuestion3.addOption("D");
-    Quiz testQuiz = new Quiz("TestQuiz");
-    this.quizzesList.add(new Quiz("TestQuiz2"));
-    this.quizzesList.add(new Quiz("TestQuiz3"));
-    this.quizzesList.add(new Quiz("TestQuiz4"));
-    this.quizzesList.add(new Quiz("TestQuiz5"));
-    testQuiz.addQuestion(testQuestion1);
-    testQuiz.addQuestion(testQuestion1);
-    testQuiz.addQuestion(testQuestion2);
-    testQuiz.addQuestion(testQuestion3);
-    this.quizzesList.add(testQuiz);
-    Log.d(Constants.LOG_TAG, "Quiz questions: " + Integer.toString(testQuiz.getQuestions().size()));
-    MainActivity.tour = new Tour("TestTour");
-    MainActivity.tour.addScore(new Score("score1", 1));
-    MainActivity.tour.addScore(new Score("score2", 2));
-    MainActivity.tour.addScore(new Score("score3", 3));
-    MainActivity.tour.addScore(new Score("score4", 4));
-    Log.d(Constants.LOG_TAG,
-        "Tour locations: " + Integer.toString(MainActivity.tour.getLocations().size()));
+  public void updateQuizList() {
+    this.adapterQuiz = new CustomQuizListAdapter(this, (ArrayList) MainActivity.quizzesList);
+    this.listQuizzes.setAdapter(this.adapterQuiz);
+  }
+
+  private boolean connectedToLocation() {
+    return true;
   }
 
   public class DownloadQuizzesAction extends AsyncTask<Void, Void, Void> {
@@ -203,19 +186,43 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected Void doInBackground(Void... voids) {
 
-      // Random used for test purpose
-      this.mSuccessDownload = new Random().nextBoolean();
+      Socket server = null;
+      ResponseHandlerImpl rhi = new ResponseHandlerImpl();
+      DownloadQuizzesCommand dqc = new DownloadQuizzesCommand(MainActivity.sessionId,
+          MainActivity.currentLocation.getName());
 
-      // DownloadQuizzesCommand suc = new DownloadQuizzesCommand(MainActivity.this.currentMonument);
-      // suc.handle(chi);
-      // TODO: 16/05/2018
+      try {
+        server = new Socket(MainActivity.HOST, MainActivity.PORT);
 
+        ObjectOutputStream oos = new ObjectOutputStream(server.getOutputStream());
+        oos.writeObject(dqc);
+
+        ObjectInputStream ois = new ObjectInputStream(server.getInputStream());
+        DownloadQuizzesResponse dqr = (DownloadQuizzesResponse) ois.readObject();
+        dqr.handle(rhi);
+
+        oos.close();
+        ois.close();
+        Log.d(Constants.LOG_TAG, "DownloadQuizzesAction");
+      } catch (Exception e) {
+        Log.d(Constants.LOG_TAG, "DownloadQuizzesAction failed..." + e.getMessage());
+        e.printStackTrace();
+      } finally {
+        if (server != null) {
+          try {
+            server.close();
+          } catch (Exception e) {
+          }
+        }
+      }
       return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
-      if (this.mSuccessDownload) {
+      if (MainActivity.quizzesUpdated) {
+        MainActivity.quizzesUpdated = false;
+        MainActivity.this.updateQuizList();
         Toast.makeText(MainActivity.this, Constants.TOAST_DOWNLOAD_QUIZZES_SUCCESS,
             Toast.LENGTH_SHORT).show();
       } else {

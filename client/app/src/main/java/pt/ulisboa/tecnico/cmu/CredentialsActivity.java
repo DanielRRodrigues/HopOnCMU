@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.ArrayList;
+import pt.ulisboa.tecnico.cmu.DataObjects.Location;
+import pt.ulisboa.tecnico.cmu.DataObjects.Quiz;
 import pt.ulisboa.tecnico.cmu.R;
 
 public class CredentialsActivity extends AppCompatActivity {

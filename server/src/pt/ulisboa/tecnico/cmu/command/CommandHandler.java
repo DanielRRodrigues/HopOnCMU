@@ -11,4 +11,6 @@ public interface CommandHandler {
 	Response handle(LogoutCommand lc);
 
 	Response handle(GetTourDetailsCommand gtdc);
+
+	Response handle(DownloadQuizzesCommand dqc);
 }

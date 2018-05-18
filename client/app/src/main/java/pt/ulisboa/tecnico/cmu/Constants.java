@@ -31,6 +31,13 @@ public final class Constants {
   public static final int SIGNUP_OK = 20004;
   public static final int SIGNUP_FAILED = 20005;
 
+  public static final int STATUS_QUIZ_AVAILABLE = 1;
+  public static final int STATUS_QUIZ_COMPLETED = 2;
+  public static final int STATUS_QUIZ_DISABLED = 3;
+  public static final String STATUS_QUIZ_AVAILABLE_TEXT = "Available";
+  public static final String STATUS_QUIZ_COMPLETED_TEXT = "Completed";
+  public static final String STATUS_QUIZ_DISABLED_TEXT = "Disabled";
+
   private Constants() {
   }
 }

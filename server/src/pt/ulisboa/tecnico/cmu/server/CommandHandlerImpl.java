@@ -6,13 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 import pt.ulisboa.tecnico.cmu.command.CommandHandler;
+import pt.ulisboa.tecnico.cmu.command.DownloadQuizzesCommand;
 import pt.ulisboa.tecnico.cmu.command.GetTourDetailsCommand;
 import pt.ulisboa.tecnico.cmu.command.LoginCommand;
 import pt.ulisboa.tecnico.cmu.command.LogoutCommand;
 import pt.ulisboa.tecnico.cmu.command.SignUpCommand;
+import pt.ulisboa.tecnico.cmu.response.DownloadQuizzesResponse;
 import pt.ulisboa.tecnico.cmu.response.GetTourDetailsResponse;
 import pt.ulisboa.tecnico.cmu.response.LoginResponse;
 import pt.ulisboa.tecnico.cmu.response.LogoutResponse;
+import pt.ulisboa.tecnico.cmu.response.QuestionResponseObject;
+import pt.ulisboa.tecnico.cmu.response.QuizResponseObject;
 import pt.ulisboa.tecnico.cmu.response.Response;
 import pt.ulisboa.tecnico.cmu.response.SignUpResponse;
 
@@ -89,9 +93,11 @@ public class CommandHandlerImpl implements CommandHandler {
 		for (Location l : locations) {
 			locationsName.add(l.getName());
 		}
-		Location currentLocation = new Location(currentLocationName);
-		Location nextLocation = new Location(null);
-		if (currentLocation.getName() == null) {
+		Location currentLocation = tour.getLocationByName(currentLocationName);
+		if (currentLocationName != null && currentLocation == null)
+			return new GetTourDetailsResponse(true);
+		Location nextLocation = null;
+		if (currentLocationName == null) {
 			if (account.getNextLocation() == null
 					&& account.getLastLocation() == null) {
 				currentLocation = tour.getNextLocation(null);
@@ -109,6 +115,30 @@ public class CommandHandlerImpl implements CommandHandler {
 				currentLocation.getName(), nextLocation.getName());
 	}
 
+	public Response handle(DownloadQuizzesCommand dqc) {
+		String sessionId = dqc.getSessionId();
+		String currentLocationName = dqc.getCurrentLocation();
+		Account account = this.sessions.get(sessionId);
+		if (account == null || account.getLastLocation() == null)
+			return new DownloadQuizzesResponse(true);
+		if (!account.getLastLocation().getName().equals(currentLocationName))
+			return new DownloadQuizzesResponse(true);
+		Location currentLocation = account.getLastLocation();
+		List<Quiz> quizzes = currentLocation.getQuizzes();
+		List<QuizResponseObject> quizzesResponse = new ArrayList<QuizResponseObject>();
+		for (Quiz q : quizzes) {
+			List<Question> questions = q.getQuestions();
+			List<QuestionResponseObject> questionsResponse = new ArrayList<QuestionResponseObject>();
+			for (Question qt : questions) {
+				questionsResponse.add(new QuestionResponseObject(qt.getText(),
+						qt.getAnswer(), qt.getOptions()));
+			}
+			quizzesResponse.add(new QuizResponseObject(q.getTitle(),
+					questionsResponse));
+		}
+		return new DownloadQuizzesResponse(quizzesResponse);
+	}
+
 	private Tour getTourById(String id) {
 		for (Tour t : this.tours) {
 			if (t.getId().equals(id))
@@ -118,22 +148,55 @@ public class CommandHandlerImpl implements CommandHandler {
 	}
 
 	public void testing() {
+		// Tour
 		Tour testTour = new Tour("TST", "TestTour");
+		// Available Codes
 		testTour.addAvailableCode("TST123");
 		testTour.addAvailableCode("124");
 		testTour.addAvailableCode("TST125");
 		testTour.addAvailableCode("TST126");
-		testTour.addLocation(new Location("L0"));
-		testTour.addLocation(new Location("L1"));
-		testTour.addLocation(new Location("L2"));
-		testTour.addLocation(new Location("L3"));
-		testTour.addLocation(new Location("L4"));
+		// Questions
+		List<String> testOptions = new ArrayList<String>();
+		testOptions.add("A");
+		testOptions.add("B");
+		testOptions.add("C");
+		testOptions.add("D");
+		List<Question> testQuestions = new ArrayList<Question>();
+		Question testQuestion0 = new Question("TestQuestion0", "A", testOptions);
+		Question testQuestion1 = new Question("TestQuestion1", "B", testOptions);
+		Question testQuestion2 = new Question("TestQuestion2", "C", testOptions);
+		Question testQuestion3 = new Question("TestQuestion3", "D", testOptions);
+		testQuestions.add(testQuestion0);
+		testQuestions.add(testQuestion1);
+		testQuestions.add(testQuestion2);
+		testQuestions.add(testQuestion3);
+		// Locations
+		Location testLocation0 = new Location("L0");
+		Location testLocation1 = new Location("L1");
+		Location testLocation2 = new Location("L2");
+		Location testLocation3 = new Location("L3");
+		Location testLocation4 = new Location("L4");
+		testTour.addLocation(testLocation0);
+		testTour.addLocation(testLocation1);
+		testTour.addLocation(testLocation2);
+		testTour.addLocation(testLocation3);
+		testTour.addLocation(testLocation4);
+		// Quizzes
+		new Quiz("TestQuiz0", testLocation0, testQuestions);
+		new Quiz("TestQuiz1", testLocation0, testQuestions);
+		new Quiz("TestQuiz2", testLocation0, testQuestions);
+		new Quiz("TestQuiz44", testLocation1, testQuestions);
+		new Quiz("TestQuiz555", testLocation2, testQuestions);
+		// Available account
 		Account testAccount = new Account("testUser", "TST125", testTour);
+		testAccount.setLastLocation(testLocation1);
+		testAccount.setNextLocation(testLocation2);
 		testTour.addAccount(testAccount);
+		// Active account
 		Account usedAccount = new Account("usedUser", "TST126", testTour);
 		usedAccount.setSessionId("123455123");
 		testTour.addAccount(usedAccount);
+		// Add tour to server
 		this.tours.add(testTour);
 	}
-
 }

@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmu.DataObjects;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import pt.ulisboa.tecnico.cmu.Constants;
 
 /**
  * Created by danif on 4/26/2018.
@@ -10,21 +11,24 @@ import java.util.List;
 
 public class Quiz implements Serializable {
 
+  private Location location;
   private List<Question> questions;
   private String title;
 
-  private int correctAmount;
+  private int status;
 
-  public Quiz(String title) {
+  public Quiz(String title, Location location) {
     this.questions = new ArrayList<Question>();
+    this.location = location;
     this.title = title;
-    this.correctAmount = 0;
+    this.status = Constants.STATUS_QUIZ_AVAILABLE;
   }
 
-  public Quiz(String title, List<Question> questions) {
+  public Quiz(String title, Location location, List<Question> questions) {
     this.questions = questions;
+    this.location = location;
     this.title = title;
-    this.correctAmount = 0;
+    this.status = Constants.STATUS_QUIZ_AVAILABLE;
   }
 
   @Override
@@ -78,11 +82,47 @@ public class Quiz implements Serializable {
     this.questions.remove(question);
   }
 
-  public int getCorrectAmount() {
-    return this.correctAmount;
+  public int getStatus() {
+    return status;
   }
 
-  public void setCorrectAmount(int correctAmount) {
-    this.correctAmount = correctAmount;
+  public void setStatus(int status) {
+    this.status = status;
+  }
+
+  public Location getLocation() {
+    return location;
+  }
+
+  public void setLocation(Location location) {
+    this.location = location;
+  }
+
+  public void complete() {
+    this.status = Constants.STATUS_QUIZ_COMPLETED;
+  }
+
+  public void disable() {
+    this.status = Constants.STATUS_QUIZ_DISABLED;
+  }
+
+  public boolean isAvailable() {
+    return this.status == Constants.STATUS_QUIZ_AVAILABLE;
+  }
+
+  public boolean isDisabled() {
+    return this.status == Constants.STATUS_QUIZ_COMPLETED;
+  }
+
+  public boolean isCompleted() {
+    return this.status == Constants.STATUS_QUIZ_DISABLED;
+  }
+
+  public String status() {
+    if (this.status == Constants.STATUS_QUIZ_AVAILABLE)
+      return Constants.STATUS_QUIZ_AVAILABLE_TEXT;
+    if (this.status == Constants.STATUS_QUIZ_COMPLETED)
+      return Constants.STATUS_QUIZ_COMPLETED_TEXT;
+    return Constants.STATUS_QUIZ_DISABLED_TEXT;
   }
 }

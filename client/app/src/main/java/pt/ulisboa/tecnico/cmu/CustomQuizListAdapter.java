@@ -26,7 +26,7 @@ public class CustomQuizListAdapter extends ArrayAdapter<Quiz> {
 
     Quiz item = getItem(position);
     TextView txtQuiz = (TextView) customView.findViewById(pt.ulisboa.tecnico.cmu.R.id.text_quiz);
-    txtQuiz.setText(item.getTitle());
+    txtQuiz.setText(item.getTitle() + " - " + item.status());
 
     return customView;
   }
