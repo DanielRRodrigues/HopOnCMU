@@ -235,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements SimWifiP2pManager
 
   @Override
   public void onPeersAvailable(SimWifiP2pDeviceList peers) {
+    System.out.println("---- Entrei");
     StringBuilder peersStr = new StringBuilder();
 
     List<Location> locations = tour.getLocations();
@@ -246,56 +247,22 @@ public class MainActivity extends AppCompatActivity implements SimWifiP2pManager
     for (SimWifiP2pDevice device : peers.getDeviceList()) {
       String devstr = "" + device.deviceName + " (" + device.getVirtIp() + ")\n";
       peersStr.append(devstr);
+      System.out.println("---- device name: " + device.deviceName );
       if (locationNames.contains(device.deviceName)) {
+        System.out.println("---- device name2: " + device.deviceName );
         if(!(currentLocation.getName().equals(device.deviceName))) {
+          System.out.println("---- device name3: " + device.deviceName );
           for(Location l : locations) {
             if(l.getName().equals(device.deviceName)) {
+              System.out.println("---- device name4: " + device.deviceName );
               currentLocation = l;
-              Socket server = null;
-              ResponseHandlerImpl rhi = new ResponseHandlerImpl();
-              GetTourDetailsCommand gtdc = new GetTourDetailsCommand(sessionId, currentLocation.getName());
-
-              try {
-                server = new Socket(MainActivity.HOST, MainActivity.PORT);
-
-                ObjectOutputStream oos = new ObjectOutputStream(server.getOutputStream());
-                oos.writeObject(gtdc);
-
-                ObjectInputStream ois = new ObjectInputStream(server.getInputStream());
-                GetTourDetailsResponse gtdr = (GetTourDetailsResponse) ois.readObject();
-                gtdr.handle(rhi);
-
-                oos.close();
-                ois.close();
-                Log.d(Constants.LOG_TAG, "GetTourDetailsAction");
-              }
-              catch (Exception e) {
-                Log.d(Constants.LOG_TAG, "GetTourDetailsAction failed..." + e.getMessage());
-                e.printStackTrace();
-              } finally {
-                if (server != null) {
-                  try { server.close(); }
-                  catch (Exception e) { }
-                }
-              }
+              new GetTourDetailsAction().execute();
               break;
             }
           }
         }
       }
     }
-
-
-
-    // display list of devices in range
-    new AlertDialog.Builder(this)
-            .setTitle("Devices in WiFi Range")
-            .setMessage(peersStr.toString())
-            .setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-              }
-            })
-            .show();
   }
 
   public class DownloadQuizzesAction extends AsyncTask<Void, Void, Void> {
@@ -459,6 +426,6 @@ public class MainActivity extends AppCompatActivity implements SimWifiP2pManager
   };
 
   public void getPeers() {
-    mManager.requestPeers(mChannel, MainActivity.this);
+    mManager.requestPeers(mChannel, this);
   }
 }
