@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -20,6 +21,15 @@ public class QuizActivity extends AppCompatActivity {
 
   private Quiz quiz;
   private Button btnSubmit;
+
+  private OnClickListener btnSubmitClickListener = (new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+      Toast.makeText(getApplicationContext(), Constants.TOAST_QUIZ_SUBMITED,
+          Toast.LENGTH_SHORT).show();
+      finish();
+    }
+  });
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +48,6 @@ public class QuizActivity extends AppCompatActivity {
     this.listQuestions.setAdapter(this.quizAdapter);
 
     this.btnSubmit = (Button) findViewById(R.id.button_submit);
-    this.btnSubmit.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        Toast.makeText(getApplicationContext(), Constants.TOAST_QUIZ_SUBMITED,
-            Toast.LENGTH_SHORT).show();
-        finish();
-      }
-    });
+    this.btnSubmit.setOnClickListener(this.btnSubmitClickListener);
   }
 }

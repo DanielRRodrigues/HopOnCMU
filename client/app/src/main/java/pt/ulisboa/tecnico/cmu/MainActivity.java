@@ -18,9 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import pt.ulisboa.tecnico.cmu.DataObjects.Location;
-import pt.ulisboa.tecnico.cmu.DataObjects.Question;
 import pt.ulisboa.tecnico.cmu.DataObjects.Quiz;
-import pt.ulisboa.tecnico.cmu.DataObjects.Score;
 import pt.ulisboa.tecnico.cmu.DataObjects.Tour;
 import pt.ulisboa.tecnico.cmu.client.ResponseHandlerImpl;
 import pt.ulisboa.tecnico.cmu.command.DownloadQuizzesCommand;
@@ -87,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
       public void onClick(View view) {
         Log.d(Constants.LOG_TAG, "onClick info: Ranking");
         Intent intent = new Intent(getApplicationContext(), RankingActivity.class);
-        intent.putExtra(Constants.EXTRA_TOUR, MainActivity.tour);
         startActivity(intent);
       }
     });

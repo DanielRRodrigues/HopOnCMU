@@ -165,11 +165,13 @@ public class Tour implements Serializable {
 		return this.usedCodes.remove(usedCode);
 	}
 
-	public List<Score> getAllScores() {
+	public List<Score> getAllScores(boolean ordered) {
 		List<Score> allScores = new ArrayList<Score>();
 		for (Account a : this.accounts) {
 			allScores.add(a.getScore());
 		}
+		if (ordered)
+			Collections.sort(allScores);
 		return allScores;
 	}
 

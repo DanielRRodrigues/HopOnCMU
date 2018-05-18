@@ -15,6 +15,7 @@ public final class Constants {
   public static final String TOAST_QUIZ_SUBMITED = "Quiz submited";
   public static final String TOAST_DAY_FINISHED = "Day finished";
   public static final String TOAST_LOGOUT = "Logged out";
+  public static final String TOAST_RANKING_UPDATE_FAILED = "Failed to updated rankings";
 
   public static final String EXTRA_QUIZ = "QUIZ";
   public static final String EXTRA_TOUR = "TOUR";

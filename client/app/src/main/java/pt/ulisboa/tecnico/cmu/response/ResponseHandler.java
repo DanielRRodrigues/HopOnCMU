@@ -11,5 +11,7 @@ public interface ResponseHandler {
   void handle(GetTourDetailsResponse gtdr);
 
   void handle(DownloadQuizzesResponse dqr);
+
+  void handle(UpdateRankingResponse urr);
 }
 

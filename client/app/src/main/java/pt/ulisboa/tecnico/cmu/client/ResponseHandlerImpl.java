@@ -7,9 +7,11 @@ import pt.ulisboa.tecnico.cmu.Constants;
 import pt.ulisboa.tecnico.cmu.DataObjects.Location;
 import pt.ulisboa.tecnico.cmu.DataObjects.Question;
 import pt.ulisboa.tecnico.cmu.DataObjects.Quiz;
+import pt.ulisboa.tecnico.cmu.DataObjects.Score;
 import pt.ulisboa.tecnico.cmu.DataObjects.Tour;
 import pt.ulisboa.tecnico.cmu.LoginActivity;
 import pt.ulisboa.tecnico.cmu.MainActivity;
+import pt.ulisboa.tecnico.cmu.RankingActivity;
 import pt.ulisboa.tecnico.cmu.SignUpActivity;
 import pt.ulisboa.tecnico.cmu.response.DownloadQuizzesResponse;
 import pt.ulisboa.tecnico.cmu.response.GetTourDetailsResponse;
@@ -18,7 +20,9 @@ import pt.ulisboa.tecnico.cmu.response.LogoutResponse;
 import pt.ulisboa.tecnico.cmu.response.QuestionResponseObject;
 import pt.ulisboa.tecnico.cmu.response.QuizResponseObject;
 import pt.ulisboa.tecnico.cmu.response.ResponseHandler;
+import pt.ulisboa.tecnico.cmu.response.ScoreResponseObject;
 import pt.ulisboa.tecnico.cmu.response.SignUpResponse;
+import pt.ulisboa.tecnico.cmu.response.UpdateRankingResponse;
 
 /**
  * Created by danif on 16-May-18.
@@ -121,5 +125,31 @@ public class ResponseHandlerImpl implements ResponseHandler {
     }
     Log.d(Constants.LOG_TAG, "handle: DownloadQuizzesResponse -- " + MainActivity.sessionId);
     Log.d(Constants.LOG_TAG, "------------------------ END -- handle: DownloadQuizzesResponse");
+  }
+
+  @Override
+  public void handle(UpdateRankingResponse urr) {
+    Log.d(Constants.LOG_TAG, "------------------------ START -- handle: UpdateRankingResponse");
+    boolean error = urr.getError();
+    if (error) {
+      Log.d(Constants.LOG_TAG, "handle: UpdateRankingResponse -- ERROR");
+    } else {
+      RankingActivity.updated = true;
+      List<ScoreResponseObject> scores = urr.getScores();
+      Log.d(Constants.LOG_TAG, "handle: UpdateRankingResponse -- " + scores.size());
+      List<Score> newScores = new ArrayList<Score>();
+      for (ScoreResponseObject score : scores) {
+        String username = score.getUsername();
+        int correctAnswers = score.getCorrectAnswers();
+        int totalQuestions = score.getTotalQuestions();
+        newScores.add(new Score(username, correctAnswers, totalQuestions));
+        Log.d(Constants.LOG_TAG, "handle: UpdateRankingResponse -- " + username);
+        Log.d(Constants.LOG_TAG, "handle: UpdateRankingResponse -- " + correctAnswers);
+        Log.d(Constants.LOG_TAG, "handle: UpdateRankingResponse -- " + totalQuestions);
+      }
+      MainActivity.tour.updateScores(newScores);
+    }
+    Log.d(Constants.LOG_TAG, "handle: UpdateRankingResponse -- " + MainActivity.sessionId);
+    Log.d(Constants.LOG_TAG, "------------------------ END -- handle: UpdateRankingResponse");
   }
 }
