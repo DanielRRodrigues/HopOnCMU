@@ -7,8 +7,10 @@ import java.util.Map;
 
 import pt.ulisboa.tecnico.cmu.command.CommandHandler;
 import pt.ulisboa.tecnico.cmu.command.LoginCommand;
+import pt.ulisboa.tecnico.cmu.command.LogoutCommand;
 import pt.ulisboa.tecnico.cmu.command.SignUpCommand;
 import pt.ulisboa.tecnico.cmu.response.LoginResponse;
+import pt.ulisboa.tecnico.cmu.response.LogoutResponse;
 import pt.ulisboa.tecnico.cmu.response.Response;
 import pt.ulisboa.tecnico.cmu.response.SignUpResponse;
 
@@ -30,9 +32,9 @@ public class CommandHandlerImpl implements CommandHandler {
 		if (tour == null)
 			return new LoginResponse(null);
 		Account account = tour.getAcountByUsername(username);
-		if (account == null || account.getSessionId() != null
-				|| !account.getCode().equals(code))
+		if (account == null || !account.getCode().equals(code))
 			return new LoginResponse(null);
+		sessions.remove(account.getSessionId());
 		String sessionId = account.generateSessionId();
 		sessions.put(sessionId, account);
 		return new LoginResponse(sessionId);
@@ -60,6 +62,17 @@ public class CommandHandlerImpl implements CommandHandler {
 		return new SignUpResponse(null);
 	}
 
+	@Override
+	public Response handle(LogoutCommand lc) {
+		String sessionId = lc.getSessionId();
+		Account account = this.sessions.get(sessionId);
+		if (account == null)
+			return new LogoutResponse(false);
+		account.setSessionId(null);
+		this.sessions.remove(sessionId);
+		return new LogoutResponse(true);
+	}
+
 	private Tour getTourById(String id) {
 		for (Tour t : this.tours) {
 			if (t.getId().equals(id))
@@ -81,4 +94,5 @@ public class CommandHandlerImpl implements CommandHandler {
 		testTour.addAccount(usedAccount);
 		this.tours.add(testTour);
 	}
+
 }

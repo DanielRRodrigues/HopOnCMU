@@ -52,7 +52,8 @@ public class LoginActivity extends AppCompatActivity {
         if (LoginActivity.sessionId != null) {
           Intent resultIntent = new Intent();
           resultIntent.putExtra(Constants.EXTRA_SESSION_ID, LoginActivity.sessionId);
-          setResult(Constants.LOGIN_OK);
+          setResult(Constants.LOGIN_OK, resultIntent
+          );
           LoginActivity.this.finish();
         }
       }

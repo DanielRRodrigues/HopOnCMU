@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -20,12 +23,15 @@ import pt.ulisboa.tecnico.cmu.DataObjects.Question;
 import pt.ulisboa.tecnico.cmu.DataObjects.Quiz;
 import pt.ulisboa.tecnico.cmu.DataObjects.Score;
 import pt.ulisboa.tecnico.cmu.DataObjects.Tour;
+import pt.ulisboa.tecnico.cmu.client.ResponseHandlerImpl;
+import pt.ulisboa.tecnico.cmu.command.LogoutCommand;
+import pt.ulisboa.tecnico.cmu.response.LogoutResponse;
 
 public class MainActivity extends AppCompatActivity {
 
   public static final String HOST = "192.168.1.2";
   public static final int PORT = 9090;
-
+  public static String sessionId = null;
   private Button btnLogOut;
   private Button btnDownloadQuizzes;
   private Button btnRanking;
@@ -34,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
   private ListAdapter adapterQuiz;
   private ListView listQuizzes;
 
-  private boolean loggedIn = false;
-  private String sessionId = null;
   private String currentMonument = null;
   private List<Quiz> quizzesList = new ArrayList<Quiz>();
   private Tour tour = null;
@@ -60,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     this.btnLogOut.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        MainActivity.this.loggedIn = false;
+        MainActivity.this.logout();
         MainActivity.this.authenticate();
       }
     });
@@ -69,13 +73,7 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void onClick(View view) {
         AsyncTask<Void, Void, Void> task = new DownloadQuizzesAction();
-        try {
-          task.execute().get();
-        } catch (InterruptedException e) {
-          Log.d(Constants.LOG_TAG, "onClick error: InterruptedException");
-        } catch (ExecutionException e) {
-          Log.d(Constants.LOG_TAG, "onClick error: ExecutionException");
-        }
+        task.execute();
       }
     });
 
@@ -120,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
   protected void onStart() {
     super.onStart();
 
-    if (!this.loggedIn) {
+    if (MainActivity.sessionId == null) {
       this.authenticate();
     }
   }
@@ -130,7 +128,8 @@ public class MainActivity extends AppCompatActivity {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == Constants.REQUEST_AUTH) {
       if (resultCode == Constants.AUTH_OK) {
-        this.loggedIn = true;
+        String sessionId = (String) data.getSerializableExtra(Constants.EXTRA_SESSION_ID);
+        MainActivity.sessionId = sessionId;
       } else {  // resultCode == Constants.AUTH_FAILED
         this.finish();
       }
@@ -140,6 +139,17 @@ public class MainActivity extends AppCompatActivity {
   private void authenticate() {
     Intent intent = new Intent(this, CredentialsActivity.class);
     startActivityForResult(intent, Constants.REQUEST_AUTH);
+  }
+
+  private void logout() {
+    AsyncTask<Void, Void, Void> task = new LogoutAction();
+    try {
+      task.execute().get();
+    } catch (InterruptedException e) {
+      Log.d(Constants.LOG_TAG, "onClick error: InterruptedException");
+    } catch (ExecutionException e) {
+      Log.d(Constants.LOG_TAG, "onClick error: ExecutionException");
+    }
   }
 
   private void testingQuizzes() {
@@ -217,4 +227,47 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  public class LogoutAction extends AsyncTask<Void, Void, Void> {
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+
+      Socket server = null;
+      ResponseHandlerImpl rhi = new ResponseHandlerImpl();
+      LogoutCommand lc = new LogoutCommand(MainActivity.sessionId);
+
+      try {
+        server = new Socket(MainActivity.HOST, MainActivity.PORT);
+
+        ObjectOutputStream oos = new ObjectOutputStream(server.getOutputStream());
+        oos.writeObject(lc);
+
+        ObjectInputStream ois = new ObjectInputStream(server.getInputStream());
+        LogoutResponse lr = (LogoutResponse) ois.readObject();
+        lr.handle(rhi);
+
+        oos.close();
+        ois.close();
+        Log.d(Constants.LOG_TAG, "LogoutAction");
+      } catch (Exception e) {
+        Log.d(Constants.LOG_TAG, "LogoutAction failed..." + e.getMessage());
+        e.printStackTrace();
+      } finally {
+        if (server != null) {
+          try {
+            server.close();
+          } catch (Exception e) {
+          }
+        }
+      }
+
+      return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+      Toast.makeText(MainActivity.this, Constants.TOAST_LOGOUT,
+          Toast.LENGTH_SHORT).show();
+    }
+  }
 }

@@ -3,8 +3,10 @@ package pt.ulisboa.tecnico.cmu.client;
 import android.util.Log;
 import pt.ulisboa.tecnico.cmu.Constants;
 import pt.ulisboa.tecnico.cmu.LoginActivity;
+import pt.ulisboa.tecnico.cmu.MainActivity;
 import pt.ulisboa.tecnico.cmu.SignUpActivity;
 import pt.ulisboa.tecnico.cmu.response.LoginResponse;
+import pt.ulisboa.tecnico.cmu.response.LogoutResponse;
 import pt.ulisboa.tecnico.cmu.response.ResponseHandler;
 import pt.ulisboa.tecnico.cmu.response.SignUpResponse;
 
@@ -41,4 +43,18 @@ public class ResponseHandlerImpl implements ResponseHandler {
     Log.d(Constants.LOG_TAG, "handle: LoginResponse -- " + LoginActivity.sessionId);
     Log.d(Constants.LOG_TAG, "------------------------ END -- handle: LoginResponse");
   }
+
+  @Override
+  public void handle(LogoutResponse lr) {
+    Log.d(Constants.LOG_TAG, "------------------------ START -- handle: LogoutResponse");
+    boolean loggedOut = lr.getLoggedOut();
+    if (loggedOut) {
+      MainActivity.sessionId = null;
+    }
+    Log.d(Constants.LOG_TAG, "handle: LogoutResponse -- " + loggedOut);
+    Log.d(Constants.LOG_TAG, "handle: LogoutResponse -- " + MainActivity.sessionId);
+    Log.d(Constants.LOG_TAG, "------------------------ END -- handle: LogoutResponse");
+  }
+
+  ;
 }
