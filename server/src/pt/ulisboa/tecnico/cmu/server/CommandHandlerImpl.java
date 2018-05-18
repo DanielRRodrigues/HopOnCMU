@@ -29,7 +29,7 @@ public class CommandHandlerImpl implements CommandHandler {
 	public Response handle(LoginCommand lc) {
 		String username = lc.getUsername();
 		String code = lc.getCode();
-		System.out.println("username: " + username + " code: " + code);
+		System.out.println("Login: username: " + username + " code: " + code);
 		String id;
 		if (code.length() > 3)
 			id = code.substring(0, 3);
@@ -84,6 +84,7 @@ public class CommandHandlerImpl implements CommandHandler {
 	public Response handle(GetTourDetailsCommand gtdc) {
 		String sessionId = gtdc.getSessionId();
 		String currentLocationName = gtdc.getCurrentLocation();
+		System.out.println("GetTourDetails: sessionId: " + sessionId + " currentLocationName: " + currentLocationName);
 		Account account = this.sessions.get(sessionId);
 		if (account == null)
 			return new GetTourDetailsResponse(true);

@@ -229,11 +229,55 @@ public class MainActivity extends AppCompatActivity implements SimWifiP2pManager
   public void onPeersAvailable(SimWifiP2pDeviceList peers) {
     StringBuilder peersStr = new StringBuilder();
 
+    List<Location> locations = tour.getLocations();
+    List<String> locationNames = new ArrayList<>();
+    for (Location l : locations) {
+      locationNames.add(l.getName());
+    }
     // compile list of devices in range
     for (SimWifiP2pDevice device : peers.getDeviceList()) {
       String devstr = "" + device.deviceName + " (" + device.getVirtIp() + ")\n";
       peersStr.append(devstr);
+      if (locationNames.contains(device.deviceName)) {
+        if(!(currentLocation.getName().equals(device.deviceName))) {
+          for(Location l : locations) {
+            if(l.getName().equals(device.deviceName)) {
+              currentLocation = l;
+              Socket server = null;
+              ResponseHandlerImpl rhi = new ResponseHandlerImpl();
+              GetTourDetailsCommand gtdc = new GetTourDetailsCommand(sessionId, currentLocation.getName());
+
+              try {
+                server = new Socket(MainActivity.HOST, MainActivity.PORT);
+
+                ObjectOutputStream oos = new ObjectOutputStream(server.getOutputStream());
+                oos.writeObject(gtdc);
+
+                ObjectInputStream ois = new ObjectInputStream(server.getInputStream());
+                GetTourDetailsResponse gtdr = (GetTourDetailsResponse) ois.readObject();
+                gtdr.handle(rhi);
+
+                oos.close();
+                ois.close();
+                Log.d(Constants.LOG_TAG, "GetTourDetailsAction");
+              }
+              catch (Exception e) {
+                Log.d(Constants.LOG_TAG, "GetTourDetailsAction failed..." + e.getMessage());
+                e.printStackTrace();
+              } finally {
+                if (server != null) {
+                  try { server.close(); }
+                  catch (Exception e) { }
+                }
+              }
+              break;
+            }
+          }
+        }
+      }
     }
+
+
 
     // display list of devices in range
     new AlertDialog.Builder(this)
@@ -405,4 +449,8 @@ public class MainActivity extends AppCompatActivity implements SimWifiP2pManager
       mBound = false;
     }
   };
+
+  public void getPeers() {
+    mManager.requestPeers(mChannel, MainActivity.this);
+  }
 }
