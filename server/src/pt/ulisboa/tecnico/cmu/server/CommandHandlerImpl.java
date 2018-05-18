@@ -29,6 +29,7 @@ public class CommandHandlerImpl implements CommandHandler {
 	public Response handle(LoginCommand lc) {
 		String username = lc.getUsername();
 		String code = lc.getCode();
+		System.out.println("username: " + username + " code: " + code);
 		String id;
 		if (code.length() > 3)
 			id = code.substring(0, 3);

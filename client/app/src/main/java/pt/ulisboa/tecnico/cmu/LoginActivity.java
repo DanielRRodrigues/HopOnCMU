@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(pt.ulisboa.tecnico.cmu.R.layout.activity_login);
     setResult(Constants.LOGIN_FAILED);
-
+    System.out.println("--- -1DDD");
     this.etUsername = (EditText) findViewById(pt.ulisboa.tecnico.cmu.R.id.edit_username);
     this.etCode = (EditText) findViewById(pt.ulisboa.tecnico.cmu.R.id.edit_code);
     this.btnLogin = (Button) findViewById(pt.ulisboa.tecnico.cmu.R.id.button_login);
@@ -49,7 +49,9 @@ public class LoginActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
           Log.d(Constants.LOG_TAG, "onClick error: ExecutionException");
         }
+        System.out.println("--- -1");
         if (LoginActivity.sessionId != null) {
+          System.out.println("--- 1");
           Intent resultIntent = new Intent();
           resultIntent.putExtra(Constants.EXTRA_SESSION_ID, LoginActivity.sessionId);
           setResult(Constants.LOGIN_OK, resultIntent
