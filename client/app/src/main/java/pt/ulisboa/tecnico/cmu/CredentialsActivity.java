@@ -51,7 +51,7 @@ public class CredentialsActivity extends AppCompatActivity {
       }
     } else if (requestCode == Constants.REQUEST_SIGNUP) {
       if (resultCode == Constants.SIGNUP_OK) {
-        setResult(Constants.AUTH_OK);
+        setResult(Constants.AUTH_OK, data);
         this.finish();
       } else {  // resultCode == Constants.AUTH_FAILED
         // Do Nothing

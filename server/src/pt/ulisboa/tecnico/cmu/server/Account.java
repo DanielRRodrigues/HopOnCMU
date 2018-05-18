@@ -117,8 +117,10 @@ public class Account implements Serializable {
 		return this.sessionId != null;
 	}
 
-	public void generateSessionId() {
-		setSessionId(UUID.randomUUID().toString());
+	public String generateSessionId() {
+		String newSessionId = UUID.randomUUID().toString();
+		setSessionId(newSessionId);
+		return newSessionId;
 	}
 
 }

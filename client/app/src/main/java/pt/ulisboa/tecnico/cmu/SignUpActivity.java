@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmu;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,18 +10,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import pt.ulisboa.tecnico.cmu.client.ResponseHandlerImpl;
 import pt.ulisboa.tecnico.cmu.command.SignUpCommand;
 
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
+import pt.ulisboa.tecnico.cmu.response.SignUpResponse;
 
 public class SignUpActivity extends AppCompatActivity {
+
+  public static String sessionId = null;
 
   private EditText etUsername;
   private EditText etCode;
   private Button btnSignUp;
-
-  private boolean loggedIn = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +49,10 @@ public class SignUpActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
           Log.d(Constants.LOG_TAG, "onClick error: ExecutionException");
         }
-        if (SignUpActivity.this.loggedIn) {
-          // login()
-          // TODO: 16/05/2018
-          setResult(Constants.SIGNUP_OK);
+        if (SignUpActivity.sessionId != null) {
+          Intent resultIntent = new Intent();
+          resultIntent.putExtra(Constants.EXTRA_SESSION_ID, SignUpActivity.sessionId);
+          setResult(Constants.SIGNUP_OK, resultIntent);
           SignUpActivity.this.finish();
         }
       }
@@ -79,13 +85,34 @@ public class SignUpActivity extends AppCompatActivity {
         return null;
       }
 
-      // Random used for test purpose
-      SignUpActivity.this.loggedIn = new Random().nextBoolean();
-
+      Socket server = null;
+      ResponseHandlerImpl rhi = new ResponseHandlerImpl();
       SignUpCommand suc = new SignUpCommand(this.username, this.code);
-      // suc.handle(chi);
-      // TODO: 16/05/2018
 
+      try {
+        server = new Socket(MainActivity.HOST, MainActivity.PORT);
+
+        ObjectOutputStream oos = new ObjectOutputStream(server.getOutputStream());
+        oos.writeObject(suc);
+
+        ObjectInputStream ois = new ObjectInputStream(server.getInputStream());
+        SignUpResponse sur = (SignUpResponse) ois.readObject();
+
+        rhi.handle(sur);
+
+        oos.close();
+        ois.close();
+        Log.d(Constants.LOG_TAG, "SignUpAction");
+      }
+      catch (Exception e) {
+        Log.d(Constants.LOG_TAG, "SignUpAction failed..." + e.getMessage());
+        e.printStackTrace();
+      } finally {
+        if (server != null) {
+          try { server.close(); }
+          catch (Exception e) { }
+        }
+      }
       return null;
     }
 
@@ -97,11 +124,11 @@ public class SignUpActivity extends AppCompatActivity {
       if (this.emptyCode) {
         SignUpActivity.this.editCodeSetError(Constants.ERROR_EMPTY_EDIT_TEXT);
       }
-      if (!this.emptyCode && !this.emptyUsername && !SignUpActivity.this.loggedIn) {
+      if (!this.emptyCode && !this.emptyUsername && SignUpActivity.this.sessionId == null) {
         Toast.makeText(SignUpActivity.this, Constants.TOAST_SIGNUP_FAILED, Toast.LENGTH_SHORT)
             .show();
       }
-      if (SignUpActivity.this.loggedIn) {
+      if (SignUpActivity.this.sessionId != null) {
         Toast.makeText(SignUpActivity.this, Constants.TOAST_SIGNUP_SUCCESS, Toast.LENGTH_SHORT)
             .show();
       }

@@ -24,6 +24,9 @@ import pt.ulisboa.tecnico.cmu.command.DownloadQuizzesCommand;
 
 public class MainActivity extends AppCompatActivity {
 
+  public static final String HOST = "192.168.1.2";
+  public static final int PORT = 9090;
+
   private Button btnLogOut;
   private Button btnDownloadQuizzes;
   private Button btnRanking;
@@ -33,9 +36,10 @@ public class MainActivity extends AppCompatActivity {
   private ListView listQuizzes;
 
   private boolean loggedIn = false;
-  private String currentMonument;
+  private String sessionId = null;
+  private String currentMonument = null;
   private List<Quiz> quizzesList = new ArrayList<Quiz>();
-  private Tour tour;
+  private Tour tour = null;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

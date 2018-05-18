@@ -1,7 +1,7 @@
 package pt.ulisboa.tecnico.cmu.response;
 
 public interface ResponseHandler {
-    public void helloResponseHandle(HelloResponse hr);
-    public void signUpResponseHandle();
+    void handle(HelloResponse hr);
+    void handle(SignUpResponse sur);
 }
 

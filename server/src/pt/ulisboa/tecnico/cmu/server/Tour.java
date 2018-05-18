@@ -16,7 +16,8 @@ public class Tour implements Serializable {
 	private List<String> availableCodes;
 	private List<String> usedCodes;
 
-	public Tour(String name) {
+	public Tour(String id, String name) {
+		this.id = id;
 		this.name = name;
 		this.locations = new ArrayList<Location>();
 		this.accounts = new ArrayList<Account>();
@@ -24,8 +25,9 @@ public class Tour implements Serializable {
 		this.usedCodes = new ArrayList<String>();
 	}
 
-	public Tour(String name, List<Location> locations, List<Account> accounts,
-			List<String> availableCodes) {
+	public Tour(String id, String name, List<Location> locations,
+			List<Account> accounts, List<String> availableCodes) {
+		this.id = id;
 		this.name = name;
 		this.locations = new ArrayList<Location>(locations);
 		this.accounts = new ArrayList<Account>(accounts);
@@ -98,6 +100,14 @@ public class Tour implements Serializable {
 
 	public List<Account> getAcounts() {
 		return Collections.unmodifiableList(this.accounts);
+	}
+
+	public Account getAcountByUsername(String username) {
+		for (Account a : this.accounts) {
+			if (a.getUsername().equals(username))
+				return a;
+		}
+		return null;
 	}
 
 	public void setAcounts(List<Account> accounts) {
