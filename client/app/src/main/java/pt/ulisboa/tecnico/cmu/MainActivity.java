@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         Quiz item = (Quiz) MainActivity.this.listQuizzes.getItemAtPosition(position);
         Intent intent = new Intent(getApplicationContext(), QuizActivity.class);
         intent.putExtra(Constants.EXTRA_QUIZ, item);
-        startActivity(intent);
+        startActivityForResult(intent, Constants.REQUEST_QUIZ_PLAY);
       }
     });
   }
@@ -147,6 +147,17 @@ public class MainActivity extends AppCompatActivity {
         }
       } else {  // resultCode == Constants.AUTH_FAILED
         this.finish();
+      }
+    }
+    if (requestCode == Constants.REQUEST_QUIZ_PLAY) {
+      if (resultCode == Constants.QUIZ_PLAY_FINISH) {
+        Quiz quiz = (Quiz) data.getSerializableExtra(Constants.EXTRA_QUIZ);
+        int correctAnswers = (int) data.getSerializableExtra(Constants.EXTRA_CORRECT_ANSWERS);
+        for (Quiz q : MainActivity.quizzesList) {
+          if (q.getTitle().equals(quiz.getTitle()))
+            q.complete();
+        }
+        this.updateQuizList();
       }
     }
   }
