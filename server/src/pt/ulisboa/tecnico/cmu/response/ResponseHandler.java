@@ -7,4 +7,6 @@ public interface ResponseHandler {
 	void handle(LoginResponse lr);
 
 	void handle(LogoutResponse lr);
+
+	void handle(GetTourDetailsResponse gtdr);
 }

@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import pt.ulisboa.tecnico.cmu.command.CommandHandler;
+import pt.ulisboa.tecnico.cmu.command.GetTourDetailsCommand;
 import pt.ulisboa.tecnico.cmu.command.LoginCommand;
 import pt.ulisboa.tecnico.cmu.command.LogoutCommand;
 import pt.ulisboa.tecnico.cmu.command.SignUpCommand;
+import pt.ulisboa.tecnico.cmu.response.GetTourDetailsResponse;
 import pt.ulisboa.tecnico.cmu.response.LoginResponse;
 import pt.ulisboa.tecnico.cmu.response.LogoutResponse;
 import pt.ulisboa.tecnico.cmu.response.Response;
@@ -73,6 +75,40 @@ public class CommandHandlerImpl implements CommandHandler {
 		return new LogoutResponse(true);
 	}
 
+	@Override
+	public Response handle(GetTourDetailsCommand gtdc) {
+		String sessionId = gtdc.getSessionId();
+		String currentLocationName = gtdc.getCurrentLocation();
+		Account account = this.sessions.get(sessionId);
+		if (account == null)
+			return new GetTourDetailsResponse(true);
+		Tour tour = account.getTour();
+		String tourName = tour.getName();
+		List<Location> locations = tour.getLocations();
+		List<String> locationsName = new ArrayList<String>();
+		for (Location l : locations) {
+			locationsName.add(l.getName());
+		}
+		Location currentLocation = new Location(currentLocationName);
+		Location nextLocation = new Location(null);
+		if (currentLocation.getName() == null) {
+			if (account.getNextLocation() == null
+					&& account.getLastLocation() == null) {
+				currentLocation = tour.getNextLocation(null);
+				nextLocation = tour.getNextLocation(currentLocation);
+			} else {
+				currentLocation = account.getLastLocation();
+				nextLocation = account.getNextLocation();
+			}
+		} else {
+			nextLocation = tour.getNextLocation(currentLocation);
+		}
+		account.setLastLocation(currentLocation);
+		account.setNextLocation(nextLocation);
+		return new GetTourDetailsResponse(tourName, locationsName,
+				currentLocation.getName(), nextLocation.getName());
+	}
+
 	private Tour getTourById(String id) {
 		for (Tour t : this.tours) {
 			if (t.getId().equals(id))
@@ -87,6 +123,11 @@ public class CommandHandlerImpl implements CommandHandler {
 		testTour.addAvailableCode("124");
 		testTour.addAvailableCode("TST125");
 		testTour.addAvailableCode("TST126");
+		testTour.addLocation(new Location("L0"));
+		testTour.addLocation(new Location("L1"));
+		testTour.addLocation(new Location("L2"));
+		testTour.addLocation(new Location("L3"));
+		testTour.addLocation(new Location("L4"));
 		Account testAccount = new Account("testUser", "TST125", testTour);
 		testTour.addAccount(testAccount);
 		Account usedAccount = new Account("usedUser", "TST126", testTour);

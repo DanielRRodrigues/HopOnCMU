@@ -1,10 +1,15 @@
 package pt.ulisboa.tecnico.cmu.client;
 
 import android.util.Log;
+import java.util.ArrayList;
+import java.util.List;
 import pt.ulisboa.tecnico.cmu.Constants;
+import pt.ulisboa.tecnico.cmu.DataObjects.Location;
+import pt.ulisboa.tecnico.cmu.DataObjects.Tour;
 import pt.ulisboa.tecnico.cmu.LoginActivity;
 import pt.ulisboa.tecnico.cmu.MainActivity;
 import pt.ulisboa.tecnico.cmu.SignUpActivity;
+import pt.ulisboa.tecnico.cmu.response.GetTourDetailsResponse;
 import pt.ulisboa.tecnico.cmu.response.LoginResponse;
 import pt.ulisboa.tecnico.cmu.response.LogoutResponse;
 import pt.ulisboa.tecnico.cmu.response.ResponseHandler;
@@ -56,5 +61,32 @@ public class ResponseHandlerImpl implements ResponseHandler {
     Log.d(Constants.LOG_TAG, "------------------------ END -- handle: LogoutResponse");
   }
 
-  ;
+  @Override
+  public void handle(GetTourDetailsResponse gtdr) {
+    Log.d(Constants.LOG_TAG, "------------------------ START -- handle: GetTourDetailsResponse");
+    boolean error = gtdr.getError();
+    if (error) {
+      Log.d(Constants.LOG_TAG, "handle: GetTourDetailsResponse -- ERROR");
+    } else {
+      String tourName = gtdr.getTourName();
+      List<String> locations = (ArrayList) gtdr.getLocationList();
+      String currentLocation = gtdr.getCurrentLocation();
+      String nextLocation = gtdr.getNextLocation();
+      List<Location> locationList = new ArrayList<Location>();
+      for (String s : locations) {
+        locationList.add(new Location(s));
+      }
+      Tour newTour = new Tour(tourName, locationList);
+      MainActivity.tour = newTour;
+      MainActivity.currentLocation = new Location(currentLocation);
+      MainActivity.nextLocation = new Location(nextLocation);
+      Log.d(Constants.LOG_TAG, "handle: GetTourDetailsResponse -- " + tourName);
+      Log.d(Constants.LOG_TAG, "handle: GetTourDetailsResponse -- " + locations.size());
+      Log.d(Constants.LOG_TAG, "handle: GetTourDetailsResponse -- " + currentLocation);
+      Log.d(Constants.LOG_TAG, "handle: GetTourDetailsResponse -- " + nextLocation);
+    }
+    Log.d(Constants.LOG_TAG, "handle: GetTourDetailsResponse -- ");
+    Log.d(Constants.LOG_TAG, "handle: GetTourDetailsResponse -- " + MainActivity.sessionId);
+    Log.d(Constants.LOG_TAG, "------------------------ END -- handle: GetTourDetailsResponse");
+  }
 }

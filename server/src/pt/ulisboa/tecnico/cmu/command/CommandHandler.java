@@ -9,4 +9,6 @@ public interface CommandHandler {
 	Response handle(LoginCommand lc);
 
 	Response handle(LogoutCommand lc);
+
+	Response handle(GetTourDetailsCommand gtdc);
 }

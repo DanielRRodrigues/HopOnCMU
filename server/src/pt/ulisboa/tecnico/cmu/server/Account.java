@@ -13,7 +13,7 @@ public class Account implements Serializable {
 	private Tour tour;
 	private Score score;
 	private Location lastLocation;
-	private Location currentLocation;
+	private Location nextLocation;
 
 	public Account(String username, String code, Tour tour) {
 		this.username = username;
@@ -22,7 +22,7 @@ public class Account implements Serializable {
 		this.tour = tour;
 		this.score = new Score(tour, this);
 		this.lastLocation = null;
-		this.currentLocation = null;
+		this.nextLocation = null;
 	}
 
 	@Override
@@ -105,12 +105,12 @@ public class Account implements Serializable {
 		this.lastLocation = lastLocation;
 	}
 
-	public Location getCurrentLocation() {
-		return currentLocation;
+	public Location getNextLocation() {
+		return nextLocation;
 	}
 
-	public void setCurrentLocation(Location currentLocation) {
-		this.currentLocation = currentLocation;
+	public void setNextLocation(Location nextLocation) {
+		this.nextLocation = nextLocation;
 	}
 
 	public boolean hasActiveSession() {

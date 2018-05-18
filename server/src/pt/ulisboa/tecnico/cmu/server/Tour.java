@@ -194,4 +194,10 @@ public class Tour implements Serializable {
 			return null;
 		return this.locations.get(position + 1);
 	}
+
+	public Location getEndLocation() {
+		if (this.locations.isEmpty())
+			return null;
+		return this.locations.get(this.locations.size() - 1);
+	}
 }

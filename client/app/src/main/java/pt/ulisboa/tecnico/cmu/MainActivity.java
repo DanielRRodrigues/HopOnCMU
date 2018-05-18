@@ -24,7 +24,9 @@ import pt.ulisboa.tecnico.cmu.DataObjects.Quiz;
 import pt.ulisboa.tecnico.cmu.DataObjects.Score;
 import pt.ulisboa.tecnico.cmu.DataObjects.Tour;
 import pt.ulisboa.tecnico.cmu.client.ResponseHandlerImpl;
+import pt.ulisboa.tecnico.cmu.command.GetTourDetailsCommand;
 import pt.ulisboa.tecnico.cmu.command.LogoutCommand;
+import pt.ulisboa.tecnico.cmu.response.GetTourDetailsResponse;
 import pt.ulisboa.tecnico.cmu.response.LogoutResponse;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
   public static final String HOST = "192.168.1.2";
   public static final int PORT = 9090;
   public static String sessionId = null;
+  public static Location currentLocation = new Location(null);
+  public static Location nextLocation = new Location(null);
+  public static Tour tour = null;
+
   private Button btnLogOut;
   private Button btnDownloadQuizzes;
   private Button btnRanking;
@@ -40,9 +46,7 @@ public class MainActivity extends AppCompatActivity {
   private ListAdapter adapterQuiz;
   private ListView listQuizzes;
 
-  private String currentMonument = null;
   private List<Quiz> quizzesList = new ArrayList<Quiz>();
-  private Tour tour = null;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
       public void onClick(View view) {
         Log.d(Constants.LOG_TAG, "onClick info: Ranking");
         Intent intent = new Intent(getApplicationContext(), RankingActivity.class);
-        intent.putExtra(Constants.EXTRA_TOUR, MainActivity.this.tour);
+        intent.putExtra(Constants.EXTRA_TOUR, MainActivity.tour);
         startActivity(intent);
       }
     });
@@ -97,8 +101,9 @@ public class MainActivity extends AppCompatActivity {
     this.btnLocations.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
+        new GetTourDetailsAction().execute();
         Intent intent = new Intent(getApplicationContext(), LocationsActivity.class);
-        intent.putExtra(Constants.EXTRA_TOUR, MainActivity.this.tour);
+        intent.putExtra(Constants.EXTRA_TOUR, MainActivity.tour);
         startActivity(intent);
       }
     });
@@ -153,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void testingQuizzes() {
-    this.currentMonument = "TestMonument";
     //Question 1
     Question testQuestion1 = new Question("TestQuestion1", "C");
     testQuestion1.addOption("A");
@@ -183,19 +187,13 @@ public class MainActivity extends AppCompatActivity {
     testQuiz.addQuestion(testQuestion3);
     this.quizzesList.add(testQuiz);
     Log.d(Constants.LOG_TAG, "Quiz questions: " + Integer.toString(testQuiz.getQuestions().size()));
-    // Locations
-    List<Location> testLocations = new ArrayList<Location>();
-    testLocations.add(new Location("L1"));
-    testLocations.add(new Location("L2"));
-    testLocations.add(new Location("L3"));
-    testLocations.add(new Location("L4"));
-    this.tour = new Tour("TestTour", testLocations);
-    this.tour.addScore(new Score("score1", 1));
-    this.tour.addScore(new Score("score2", 2));
-    this.tour.addScore(new Score("score3", 3));
-    this.tour.addScore(new Score("score4", 4));
+    MainActivity.tour = new Tour("TestTour");
+    MainActivity.tour.addScore(new Score("score1", 1));
+    MainActivity.tour.addScore(new Score("score2", 2));
+    MainActivity.tour.addScore(new Score("score3", 3));
+    MainActivity.tour.addScore(new Score("score4", 4));
     Log.d(Constants.LOG_TAG,
-        "Tour locations: " + Integer.toString(this.tour.getLocations().size()));
+        "Tour locations: " + Integer.toString(MainActivity.tour.getLocations().size()));
   }
 
   public class DownloadQuizzesAction extends AsyncTask<Void, Void, Void> {
@@ -268,6 +266,49 @@ public class MainActivity extends AppCompatActivity {
     protected void onPostExecute(Void aVoid) {
       Toast.makeText(MainActivity.this, Constants.TOAST_LOGOUT,
           Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  public class GetTourDetailsAction extends AsyncTask<Void, Void, Void> {
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+
+      Socket server = null;
+      ResponseHandlerImpl rhi = new ResponseHandlerImpl();
+      GetTourDetailsCommand gtdc = new GetTourDetailsCommand(MainActivity.sessionId,
+          MainActivity.currentLocation.getName());
+
+      try {
+        server = new Socket(MainActivity.HOST, MainActivity.PORT);
+
+        ObjectOutputStream oos = new ObjectOutputStream(server.getOutputStream());
+        oos.writeObject(gtdc);
+
+        ObjectInputStream ois = new ObjectInputStream(server.getInputStream());
+        GetTourDetailsResponse gtdr = (GetTourDetailsResponse) ois.readObject();
+        gtdr.handle(rhi);
+
+        oos.close();
+        ois.close();
+        Log.d(Constants.LOG_TAG, "GetTourDetailsAction");
+      } catch (Exception e) {
+        Log.d(Constants.LOG_TAG, "GetTourDetailsAction failed..." + e.getMessage());
+        e.printStackTrace();
+      } finally {
+        if (server != null) {
+          try {
+            server.close();
+          } catch (Exception e) {
+          }
+        }
+      }
+      return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+      // Update Location activity
     }
   }
 }
